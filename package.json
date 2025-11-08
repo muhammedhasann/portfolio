@@ -11,7 +11,6 @@
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@heroui/card": "^2.2.25",
-    "@next/font": "^14.2.15",
     "@radix-ui/react-slot": "^1.2.3",
     "@tabler/icons-react": "^3.35.0",
     "class-variance-authority": "^0.7.1",
