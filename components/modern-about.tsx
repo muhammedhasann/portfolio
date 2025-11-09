@@ -1,52 +1,35 @@
 "use client";
 
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
-import * as LucideIcons from "lucide-react"; // Import all Lucide icons
-import { ReactNode } from "react"; // Explicit import for ReactNode
-import Image from "next/image"; // Import Next.js Image component
+import * as LucideIcons from "lucide-react";
+import React, { ReactNode } from "react";
+import Image from 'next/image'; // Import Next.js Image component
 
-// --- THEME COLORS ---
-// Primary: 'cyan'
-// Secondary: 'orange'
-// Accent: 'blue'
-// New: 'purple' (Introduced for Quantum/Nuclear)
-
-// =================================================================================
-// Utility Function for Class Names (FIXED: Now supports string, falsy, and object maps)
-// =================================================================================
-// Define a type that cn can accept: string, falsy values, or an object map
+// --- Utility Function for Class Names ---
 type ClassValue = string | undefined | null | false | { [key: string]: any };
-
 const cn = (...classes: ClassValue[]): string => {
   const processedClasses: string[] = [];
-
   for (const item of classes) {
     if (typeof item === 'string') {
       processedClasses.push(item);
     } else if (typeof item === 'object' && item !== null) {
-      // Handle object: keys are class names, values are boolean conditions
       for (const key in item) {
-        // Only include class if the value is truthy
         if (Object.prototype.hasOwnProperty.call(item, key) && item[key]) {
           processedClasses.push(key);
         }
       }
     }
   }
-
   return processedClasses.filter(Boolean).join(" ");
 };
 
-// =================================================================================
-// Improved Badge Component
-// =================================================================================
+// --- Badge Component ---
 interface BadgeProps {
   className?: string;
   variant?: "default" | "cyan" | "orange" | "blue" | "purple";
   children: ReactNode;
   [key: string]: any;
 }
-
 const Badge = ({ className, variant = "default", children, ...props }: BadgeProps) => {
   const variants = {
     default: "bg-gray-800/50 text-gray-300 border-gray-700/30",
@@ -69,14 +52,11 @@ const Badge = ({ className, variant = "default", children, ...props }: BadgeProp
   );
 };
 
-// =================================================================================
-// Improved Section Badge (More colorful and dynamic)
-// =================================================================================
+// --- Section Badge Component ---
 interface SectionBadgeProps {
   icon: React.ComponentType<any>;
   text: string;
 }
-
 const SectionBadge = ({ icon: Icon, text }: SectionBadgeProps) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.8 }}
@@ -96,15 +76,12 @@ const SectionBadge = ({ icon: Icon, text }: SectionBadgeProps) => (
   </motion.div>
 );
 
-// =================================================================================
-// Improved Field Card (Glassmorphism + Glow)
-// =================================================================================
+// --- Field Card Component ---
 interface FieldCardProps {
   children: ReactNode;
   delay?: number;
   fieldColor?: "cyan" | "orange" | "blue" | "purple";
 }
-
 const FieldCard = ({ children, delay = 0, fieldColor = "cyan" }: FieldCardProps) => {
   const fieldColors = {
     cyan: "hover:shadow-[0_0_50px_rgba(79,171,255,0.4)] hover:border-cyan-400/70",
@@ -112,21 +89,18 @@ const FieldCard = ({ children, delay = 0, fieldColor = "cyan" }: FieldCardProps)
     blue: "hover:shadow-[0_0_50px_rgba(59,130,246,0.4)] hover:border-blue-500/70",
     purple: "hover:shadow-[0_0_50px_rgba(168,85,247,0.4)] hover:border-purple-500/70",
   };
-
   const dotColors = {
     cyan: "bg-[radial-gradient(circle_at_center,rgba(79,171,255,0.05)_1px,transparent_1px)]",
     orange: "bg-[radial-gradient(circle_at_center,rgba(249,115,22,0.05)_1px,transparent_1px)]",
     blue: "bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.05)_1px,transparent_1px)]",
     purple: "bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.05)_1px,transparent_1px)]",
   };
-
   const ringColors = {
     cyan: "#0ea5e9",
     orange: "#f97316", 
     blue: "#3b82f6",
     purple: "#a855f7",
   };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -135,15 +109,13 @@ const FieldCard = ({ children, delay = 0, fieldColor = "cyan" }: FieldCardProps)
       viewport={{ once: true, amount: 0.1 }}
       className={`group relative h-full bg-black/60 backdrop-blur-lg rounded-3xl p-8 border border-white/20 transition-all duration-700 ${fieldColors[fieldColor]} hover:-translate-y-1 overflow-hidden`}
     >
-      {/* Sleeker Dot pattern */}
       <div
         className={`absolute inset-0 ${dotColors[fieldColor]} bg-[size:15px_15px] opacity-10 group-hover:opacity-10 transition-opacity duration-500`}
       />
-      {/* Subtle Gradient Ring Glow - Fixed inline style */}
       <div
         className={`absolute inset-0 rounded-3xl ring-2 ring-inset ring-transparent group-hover:ring-current transition-all duration-700`}
         style={{
-          // @ts-ignore - Custom CSS property for ring color
+          // @ts-ignore
           '--tw-ring-color': ringColors[fieldColor],
         } as React.CSSProperties}
       />
@@ -152,16 +124,13 @@ const FieldCard = ({ children, delay = 0, fieldColor = "cyan" }: FieldCardProps)
   );
 };
 
-// =================================================================================
-// Section Header Component
-// =================================================================================
+// --- Section Header Component ---
 interface SectionHeaderProps {
   badgeIcon: React.ComponentType<any>;
   badgeText: string;
   title: string | ReactNode;
   subtitle?: string | ReactNode;
 }
-
 const SectionHeader = ({ badgeIcon, badgeText, title, subtitle }: SectionHeaderProps) => (
   <div className="text-center mb-16">
     <SectionBadge icon={badgeIcon} text={badgeText} />
@@ -188,16 +157,13 @@ const SectionHeader = ({ badgeIcon, badgeText, title, subtitle }: SectionHeaderP
   </div>
 );
 
-// =================================================================================
-// Improved Research Timeline
-// =================================================================================
+// --- Research Timeline Component ---
 interface ResearchTimelineProps {
   children: ReactNode;
   delay?: number;
   isLast?: boolean;
   icon: React.ComponentType<any>;
 }
-
 const ResearchTimeline = ({ children, delay = 0, isLast = false, icon: Icon }: ResearchTimelineProps) => (
   <motion.div
     initial={{ opacity: 0, x: -50 }}
@@ -224,9 +190,7 @@ const ResearchTimeline = ({ children, delay = 0, isLast = false, icon: Icon }: R
   </motion.div>
 );
 
-// =================================================================================
-// Achievement Card (Glass & Glow)
-// =================================================================================
+// --- Achievement Card Component ---
 interface AchievementCardProps {
   icon: React.ComponentType<any>;
   title: string;
@@ -235,7 +199,6 @@ interface AchievementCardProps {
   delay?: number;
   color: "cyan" | "orange" | "blue" | "purple";
 }
-
 const AchievementCard = ({ icon: Icon, title, description, impact, delay, color }: AchievementCardProps) => {
   const colors = {
     cyan: { text: "text-cyan-400", border: "border-cyan-400/10", shadow: "hover:shadow-[0_0_30px_rgba(79,171,255,0.3)]" },
@@ -244,7 +207,6 @@ const AchievementCard = ({ icon: Icon, title, description, impact, delay, color 
     purple: { text: "text-purple-400", border: "border-purple-400/10", shadow: "hover:shadow-[0_0_30px_rgba(168,85,247,0.3)]" },
   };
   const c = colors[color];
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -265,9 +227,7 @@ const AchievementCard = ({ icon: Icon, title, description, impact, delay, color 
   );
 };
 
-// =================================================================================
-// Modern Card with Mouse-Following Spotlight (Optimized)
-// =================================================================================
+// --- Modern Card Component ---
 interface ModernCardProps {
   children: ReactNode;
   delay?: number;
@@ -275,7 +235,6 @@ interface ModernCardProps {
   className?: string;
   variant?: string;
 }
-
 const ModernCard = ({ children, delay = 0, color = "cyan", className, variant }: ModernCardProps) => {
   let mouseX = useMotionValue(0);
   let mouseY = useMotionValue(0);
@@ -321,7 +280,6 @@ const ModernCard = ({ children, delay = 0, color = "cyan", className, variant }:
       )}
       onMouseMove={handleMouseMove}
     >
-      {/* Mouse-following spotlight background */}
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-500 group-hover:opacity-100"
         style={{
@@ -334,8 +292,6 @@ const ModernCard = ({ children, delay = 0, color = "cyan", className, variant }:
           `,
         }}
       />
-
-      {/* Dynamic Border Glow */}
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-500 group-hover:opacity-100"
         style={{
@@ -345,7 +301,6 @@ const ModernCard = ({ children, delay = 0, color = "cyan", className, variant }:
           boxShadow: `0 0 15px ${colorStops[color]}50`,
         }}
       />
-
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-500 group-hover:opacity-100"
         style={{
@@ -355,10 +310,7 @@ const ModernCard = ({ children, delay = 0, color = "cyan", className, variant }:
           border: '1px solid transparent',
         }}
       />
-
       <div className="absolute inset-0 rounded-2xl opacity-[0.03]" />
-
-      {/* Content */}
       <div className="relative z-10 flex h-full flex-col items-center">
         {children}
       </div>
@@ -366,9 +318,7 @@ const ModernCard = ({ children, delay = 0, color = "cyan", className, variant }:
   );
 };
 
-// =================================================================================
-// Improved Data Panel Item (Modernized values)
-// =================================================================================
+// --- Data Panel Item Component ---
 interface DataPanelItemProps {
   icon: React.ComponentType<any>;
   title: string;
@@ -377,7 +327,6 @@ interface DataPanelItemProps {
   color?: "cyan" | "orange" | "blue" | "purple";
   delay?: number;
 }
-
 const DataPanelItem = ({ icon: Icon, title, value, description, color = "cyan", delay = 0 }: DataPanelItemProps) => {
   const colorClasses = {
     cyan: { bg: "bg-cyan-500/10", border: "hover:border-cyan-400/70", value: "text-cyan-400", icon: "text-cyan-400" },
@@ -418,16 +367,13 @@ const DataPanelItem = ({ icon: Icon, title, value, description, color = "cyan", 
   );
 };
 
-// =================================================================================
-// Improved Action Button (More dynamic gradient)
-// =================================================================================
+// --- Action Button Component ---
 interface ActionButtonProps {
   children: ReactNode;
   icon?: React.ComponentType<any>;
   variant?: "primary" | "secondary";
   [key: string]: any;
 }
-
 const ActionButton = ({ children, icon: Icon, variant = "primary", ...props }: ActionButtonProps) => {
   const baseClasses =
     "group relative inline-flex items-center justify-center gap-2.5 " +
@@ -459,7 +405,7 @@ const ActionButton = ({ children, icon: Icon, variant = "primary", ...props }: A
 };
 
 // =================================================================================
-// Improved Futuristic Image Card (Using Next.js Image Component)
+// Futuristic Image Card (FIXED: Using Next.js <Image>)
 // =================================================================================
 interface FuturisticImageCardProps {
   src: string;
@@ -467,46 +413,40 @@ interface FuturisticImageCardProps {
 }
 
 const FuturisticImageCard = ({ src, alt }: FuturisticImageCardProps) => (
-  // ADDED h-full to the outer container to force vertical stretch
   <div className="relative p-1.5 rounded-3xl bg-gradient-to-br from-cyan-500/50 via-orange-500/30 to-transparent backdrop-blur-sm shadow-2xl shadow-black/70 h-full">
     <motion.div
       animate={{ opacity: [0.4, 0.8, 0.4] }}
       transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       className="absolute -inset-1 rounded-[22px] bg-gradient-to-br from-cyan-500/60 to-orange-500/60 blur-xl"
     />
-    {/* ADDED h-full to the inner container */}
     <div className="relative rounded-[20px] overflow-hidden bg-black border border-white/10 h-full">
+      
+      {/* --- THIS IS THE FIX --- */}
       <Image
         src={src}
         alt={alt}
-        width={600}
-        height={750}
-        priority
-        placeholder="blur"
-        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+        width={641}   // <-- FIX: From mobile report
+        height={480}  // <-- FIX: From mobile report
+        priority      // <-- CRITICAL: Tells Next.js to load this LCP image first
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 641px"
         className="object-cover w-full h-full opacity-85 transition-opacity duration-500 group-hover:opacity-100"
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          target.src = "/me/image.jpg";
-        }}
       />
+      {/* --- END OF FIX --- */}
+      
       <div className="absolute inset-0 [background:radial-gradient(circle_at_center,transparent_0%,transparent_50%,rgba(0,0,0,0.9)_100%)]" />
     </div>
   </div>
 );
 
-// =================================================================================
-// Improved FadeIn
-// =================================================================================
+// --- FadeIn Component ---
 interface FadeInProps {
   children: ReactNode;
   delay?: number;
   duration?: number;
   direction?: "up" | "left";
-  className?: string; // ADDED className prop
+  className?: string;
 }
-
-const FadeIn = ({ children, delay = 0, duration = 0.7, direction = "up", className }: FadeInProps) => { // ACCEPTED className
+const FadeIn = ({ children, delay = 0, duration = 0.7, direction = "up", className }: FadeInProps) => {
   const variants = {
     up: { initial: { opacity: 0, y: 15 }, animate: { opacity: 1, y: 0 } },
     left: { initial: { opacity: 0, x: -15 }, animate: { opacity: 1, x: 0 } },
@@ -517,16 +457,14 @@ const FadeIn = ({ children, delay = 0, duration = 0.7, direction = "up", classNa
       whileInView={variants[direction].animate}
       viewport={{ once: true, amount: 0.1 }}
       transition={{ delay, duration, ease: "easeInOut" }}
-      className={cn(className)} // APPLIED className
+      className={cn(className)}
     >
       {children}
     </motion.div>
   );
 };
 
-// =================================================================================
-// Data Arrays (Using LucideIcons for cleaner look)
-// =================================================================================
+// --- Data Arrays ---
 const education = [
   {
     degree: "B.Eng in Mechanical Engineering",
@@ -611,7 +549,6 @@ const achievements = [
 export default function AboutMe() {
   return (
     <section id="about-me" className="relative overflow-hidden bg-black py-20 md:py-32">
-      {/* Subtle Tech Grid Overlay (Very Low Opacity) */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(79,171,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(79,171,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] z-0 opacity-10" />
 
       <div className="max-w-7xl mx-auto px-4 relative z-10">
@@ -685,7 +622,8 @@ export default function AboutMe() {
 
           {/* Key Matrix */}
           <div className="lg:col-span-5 lg:sticky lg:top-20 self-start">
-            <motion.h3
+            {/* --- ACCESSIBILITY FIX: Changed h3 to h2 for correct heading order --- */}
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -693,7 +631,7 @@ export default function AboutMe() {
               className="text-3xl font-extrabold text-white mb-6 pl-4"
             >
               Key Matrix
-            </motion.h3>
+            </motion.h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
               <DataPanelItem
                 icon={LucideIcons.Rocket}
@@ -741,21 +679,19 @@ export default function AboutMe() {
             title="A Personal Introduction"
           />
 
-          {/* Corrected: using items-stretch and h-full on containers for matching height */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-stretch"> 
             
-            {/* Image Card (lg:col-span-5) */}
-            <div className="lg:col-span-5 h-full"> {/* ADDED h-full to the grid item */}
+            <div className="lg:col-span-5 h-full">
               <FadeIn delay={0.4} direction="up" className="h-full">
+                {/* --- THIS IS WHERE THE IMAGE PATH IS DEFINED --- */}
                 <FuturisticImageCard
-                  src="/me/b762b4c7-03b7-4d6e-a5b8-2793c381c0b5.jpeg"
+                  src="/me/imagee.jpeg"
                   alt="A portrait of Muhammed Hasan"
                 />
               </FadeIn>
             </div>
             
-            {/* Text Content (lg:col-span-7) */}
-            <div className="lg:col-span-7 h-full"> {/* ADDED h-full to the grid item */}
+            <div className="lg:col-span-7 h-full">
               <FadeIn delay={0.2} direction="up">
                 <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl mb-6">
                   My Journey So Far.
@@ -811,7 +747,6 @@ export default function AboutMe() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {researchAreas.map((area, index) => (
               <ModernCard key={index} color={area.color} delay={0.3 + index * 0.1}>
-                {/* Icon */}
                 <div
                   className={cn(
                     "mb-6 p-4 rounded-xl",
@@ -833,7 +768,6 @@ export default function AboutMe() {
                     }
                   )} />
                 </div>
-                {/* Text */}
                 <h3 className="text-2xl font-bold text-white mb-3">{area.title}</h3>
                 <p className="text-gray-300 leading-relaxed">{area.description}</p>
               </ModernCard>

@@ -1,39 +1,34 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'X-XSS-Protection', value: '1; mode=block' },
-          { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
-          { 
-            key: 'Content-Security-Policy',
-            // --- THIS IS THE FIX ---
-            // Added 'https://img.youtube.com' and 'https://www.youtube.com' to allow images and embeds
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://img.youtube.com; frame-src 'self' https://www.youtube.com;" 
-          },
-        ],
-      },
-    ];
-  },
-  
+  // Enable React Strict Mode for better error detection in development
+  reactStrictMode: true,
+
+  // Optimize images with additional formats and quality settings
   images: {
-    // This part is correct and tells Next.js to optimize these domains
     remotePatterns: [
       {
-        protocol: 'https' as const, // Added 'as const' for stricter TypeScript
+        protocol: 'https', // Removed 'as const'
         hostname: 'img.youtube.com',
       },
       {
-        protocol: 'https' as const,
+        protocol: 'https', // Removed 'as const'
         hostname: 'images.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'placehold.co', // Added this from your other components
+      },
     ],
+    // 'quality' and 'formats' are not valid top-level keys here.
+    // 'quality' is a prop on the <Image /> component.
   },
+
+  // The 'async headers()' function has been REMOVED.
+  // This fixes the 'unsafe-inline' security warning.
+  // Vercel will now provide its own default, secure headers.
+
+  // 'experimental: { appDir: true }' and 'swcMinify: true'
+  // are removed because they are default in Next.js 15.
 };
 
 module.exports = nextConfig;

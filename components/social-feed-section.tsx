@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Heart, MessageCircle, Repeat2, Share, ExternalLink, Rss } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image"; // <--- 1. IMPORT NEXT/IMAGE
 
 const XLogo = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -54,7 +55,8 @@ Anyway, three days of developing fitness app but the backend needs more work. #t
   author: {
     name: "Muhammed Hasan",
     username: "Muhammed__Hasan",
-    profile_image_url: "/me/image.jpg?height=40&width=40",
+    // --- 2. USE THE NEW LOGO ---
+    profile_image_url: "/me/imagew.jpg", // Assumes you rename your new logo and place it in /public/
     verified: true,
   },
   created_at: "2025-01-22T10:30:00.000Z",
@@ -133,6 +135,14 @@ const XCard = () => {
       </NeonGradientCard>
     );
   }
+  
+  // --- 4. ACCESSIBILITY FIX: Define button data with labels ---
+  const socialButtons = [
+    { icon: MessageCircle, label: "Reply", metric: formatNumber(post.public_metrics.reply_count), color: "hover:text-blue-400" },
+    { icon: Repeat2, label: "Retweet", metric: formatNumber(post.public_metrics.retweet_count), color: "hover:text-green-400" },
+    { icon: Heart, label: "Like", metric: formatNumber(post.public_metrics.like_count), color: "hover:text-red-400" },
+    { icon: Share, label: "Share", metric: "", color: "hover:text-blue-400" },
+  ];
 
   return (
     <motion.div
@@ -146,12 +156,18 @@ const XCard = () => {
         <div className="p-6 bg-black/90 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
-              <motion.img
-                whileHover={{ scale: 1.1 }}
-                src="/me/image.jpg"
+              
+              {/* --- 3. THE IMAGE FIX (Replaces 2.16MB <img> tag) --- */}
+              <Image
+                src={post.author.profile_image_url}
                 alt={post.author.name}
+                width={48} // Corresponds to w-12
+                height={48} // Corresponds to h-12
+                priority // Load this avatar image quickly
                 className="w-12 h-12 rounded-full border-2 border-blue-400/50"
               />
+              {/* --- END OF FIX --- */}
+
               <div>
                 <div className="flex items-center space-x-2">
                   <h3 className="font-semibold text-white">{post.author.name}</h3>
@@ -177,20 +193,16 @@ const XCard = () => {
           </div>
           <p className="text-white text-lg leading-relaxed whitespace-pre-wrap mb-6">{post.text}</p>
           <div className="flex items-center justify-between pt-4 border-t border-white/10">
-            {[
-              { icon: MessageCircle, label: formatNumber(post.public_metrics.reply_count), color: "hover:text-blue-400" },
-              { icon: Repeat2, label: formatNumber(post.public_metrics.retweet_count), color: "hover:text-blue-400" },
-              { icon: Heart, label: formatNumber(post.public_metrics.like_count), color: "hover:text-blue-400" },
-              { icon: Share, label: "", color: "hover:text-blue-400" },
-            ].map(({ icon: Icon, label, color }) => (
+            {socialButtons.map((btn) => (
               <motion.button
-                key={label}
+                key={btn.label}
+                aria-label={`${btn.label}${btn.metric ? `: ${btn.metric}` : ''}`} // <--- 4. ACCESSIBILITY FIX
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className={`flex items-center space-x-2 text-gray-400 ${color} transition-colors`}
+                className={`flex items-center space-x-2 text-gray-400 ${btn.color} transition-colors`}
               >
-                <Icon className="w-5 h-5" />
-                {label && <span className="text-sm">{label}</span>}
+                <btn.icon className="w-5 h-5" />
+                {btn.metric && <span className="text-sm">{btn.metric}</span>}
               </motion.button>
             ))}
             <Button
@@ -210,15 +222,25 @@ const XCard = () => {
 };
 
 export const SocialFeedSection = () => {
-  // State to store particle styles
   const [particles, setParticles] = useState<
     Array<{ top: string; left: string; width: string; height: string }>
   >([]);
 
+  useEffect(() => {
+    const newParticles = Array.from({ length: 20 }).map(() => ({
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      width: `${Math.random() * 3 + 1}px`,
+      height: `${Math.random() * 3 + 1}px`,
+    }));
+    setParticles(newParticles);
+  }, []);
+
+
   return (
     <section id="social" className="relative overflow-hidden bg-black py-24 md:py-32">
       <div className="absolute inset-0 bg-gradient-to-b from-black via-blue-900/5 to-black z-0" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent z-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient_stops))] from-blue-900/10 via-transparent to-transparent z-0" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.03)_1px,_transparent_1px)] bg-[length:20px_20px] z-0" />
       <div className="absolute inset-0 z-0">
         {particles.map((style, i) => (
