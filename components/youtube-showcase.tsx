@@ -4,7 +4,7 @@ import { Eye, Calendar, ExternalLink, Youtube, Clock, ThumbsUp } from "lucide-re
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
-import Image from "next/image"; // <--- Correctly imported
+import Image from "next/image"; 
 
 // --- Video Interface ---
 interface Video {
@@ -19,16 +19,13 @@ interface Video {
   publishedAt: string;
   tags: string[];
   category: string;
-  embedUrl: string;
 }
-
-// --- Video Data ---
 const videos: Video[] = [
   {
     id: "OWRiPQdLbDo",
     title: "Host React Sites Free with GitHub Pages & .tech Domains",
     description: "Complete tutorial on hosting React apps with custom domains. Perfect for students and developers.",
-    thumbnail: "https://img.youtube.com/vi/OWRiPQdLbDo/maxresdefault.jpg",
+    thumbnail: "/maxresdefault.jpg",
     url: "https://youtu.be/OWRiPQdLbDo",
     duration: "12:45",
     views: "2.1K",
@@ -36,13 +33,12 @@ const videos: Video[] = [
     publishedAt: "2024-01-15",
     tags: ["React", "GitHub", "Hosting"],
     category: "Web Development",
-    embedUrl: "https://www.youtube.com/embed/OWRiPQdLbDo",
   },
   {
     id: "xnku6mVaPIQ",
     title: "Install MongoDB on Manjaro Linux",
     description: "Step-by-step guide to installing MongoDB with troubleshooting tips.",
-    thumbnail: "https://img.youtube.com/vi/xnku6mVaPIQ/maxresdefault.jpg",
+    thumbnail: "/maxresdefault (1).jpg",
     url: "https://youtu.be/xnku6mVaPIQ",
     duration: "8:32",
     views: "1.8K",
@@ -50,10 +46,8 @@ const videos: Video[] = [
     publishedAt: "2024-01-10",
     tags: ["MongoDB", "Linux", "Database"],
     category: "DevOps",
-    embedUrl: "https://www.youtube.com/embed/xnku6mVaPIQ",
   },
 ];
-
 const formatDate = (dateString: string) =>
   new Date(dateString).toLocaleDateString("en-US", {
     month: "short",
@@ -81,7 +75,10 @@ const FuturisticBadge = () => (
 
 // --- VideoCard Component ---
 const VideoCard = ({ video, index }: { video: Video; index: number }) => {
-  const [isHovered, setIsHovered] = useState(false);
+  
+  // --- FIX: Removed 'isHovered' state ---
+  // const [isHovered, setIsHovered] = useState(false);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -89,41 +86,32 @@ const VideoCard = ({ video, index }: { video: Video; index: number }) => {
       transition={{ duration: 0.6, delay: index * 0.1 }}
       viewport={{ once: true }}
       className="flex flex-col h-full bg-gradient-to-b from-[#0f0f0f] to-[#080808] border border-neutral-800 rounded-2xl overflow-hidden shadow-2xl hover:shadow-red-700/20 hover:-translate-y-1.5 transition-all duration-300 group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      // --- FIX: Removed hover listeners ---
+      // onMouseEnter={() => setIsHovered(true)}
+      // onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative aspect-video w-full">
         <div className="absolute inset-0 rounded-t-2xl overflow-hidden">
           
-          {/* --- THIS IS THE FIX --- */}
-          {/* Replaced 'layout="fill"' with just 'fill' */}
-          {/* Replaced 'objectFit="cover"' with 'className="object-cover"' */}
           <Image
             src={video.thumbnail}
             alt={video.title}
-            fill // Use the fill prop for 'layout="fill"'
-            priority={index < 2} // Prioritize the first two images for LCP
-            className={`object-cover transition-all duration-500 ${isHovered ? "opacity-0 scale-110" : "opacity-100"}`} // Use className for 'objectFit'
+            fill
+            priority={index < 2}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            // --- FIX: Removed hover-based classes ---
+            className="object-cover transition-all duration-500"
           />
-          {/* --- END OF FIX --- */}
 
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-          <iframe
-            src={`${video.embedUrl}?autoplay=${isHovered ? 1 : 0}&mute=1&loop=1&controls=0`}
-            title={video.title}
-            className={`absolute inset-0 w-full h-full transition-opacity duration-500 rounded-t-2xl ${isHovered ? "opacity-100" : "opacity-0"}`}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+          
+          {/* --- FIX: Removed the iframe entirely --- */}
+
         </div>
-        <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${isHovered ? "opacity-0" : "opacity-100"}`}>
-          <div className="w-16 h-16 bg-gradient-to-r from-red-600 to-red-500 rounded-full flex items-center justify-center shadow-lg shadow-red-900/50">
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-            </svg>
-          </div>
-        </div>
-        <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
+        
+        {/* --- FIX: Removed the play button that shows on hover --- */}
+
+        <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10">
           <Badge className="bg-gradient-to-r from-red-600 to-red-500 text-white text-xs px-2.5 py-1 font-medium shadow-sm">
             {video.category}
           </Badge>
@@ -172,6 +160,7 @@ const VideoCard = ({ video, index }: { video: Video; index: number }) => {
             </Badge>
           ))}
         </div>
+        {/* This button is now the only way to watch, which is much faster */}
         <Button
           size="sm"
           className="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white rounded-xl font-medium group mt-auto"
@@ -187,12 +176,10 @@ const VideoCard = ({ video, index }: { video: Video; index: number }) => {
 };
 
 export const YouTubeShowcase = () => {
-  // State to store particle styles
   const [particles, setParticles] = useState<
     Array<{ top: string; left: string; width: string; height: string }>
   >([]);
 
-  // --- Create the particles ---
   useEffect(() => {
     const newParticles = Array.from({ length: 20 }).map(() => ({
       top: `${Math.random() * 100}%`,
@@ -202,7 +189,6 @@ export const YouTubeShowcase = () => {
     }));
     setParticles(newParticles);
   }, []);
-  // --- END ---
 
   return (
     <section id="youtube" className="relative overflow-hidden bg-black py-24 md:py-32">
@@ -275,7 +261,7 @@ export const YouTubeShowcase = () => {
             <Button
               size="lg"
               className="relative z-10 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-red-500/30 transition-all transform hover:-translate-y-0.5"
-              onClick={() => window.open("https://www.youtube.com/@muhammedhasan", "_blank")}
+              onClick={() => window.open("https://www.youtube.com/@muhammedhasann", "_blank")}
             >
               <Youtube className="w-5 h-5 mr-2" />
               Subscribe to Channel

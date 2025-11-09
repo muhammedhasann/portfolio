@@ -3,6 +3,7 @@
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 import * as LucideIcons from "lucide-react"; // Import all Lucide icons
 import { ReactNode } from "react"; // Explicit import for ReactNode
+import Image from "next/image"; // Import Next.js Image component
 
 // --- THEME COLORS ---
 // Primary: 'cyan'
@@ -458,7 +459,7 @@ const ActionButton = ({ children, icon: Icon, variant = "primary", ...props }: A
 };
 
 // =================================================================================
-// Improved Futuristic Image Card (Removed grid overlay)
+// Improved Futuristic Image Card (Using Next.js Image Component)
 // =================================================================================
 interface FuturisticImageCardProps {
   src: string;
@@ -475,13 +476,18 @@ const FuturisticImageCard = ({ src, alt }: FuturisticImageCardProps) => (
     />
     {/* ADDED h-full to the inner container */}
     <div className="relative rounded-[20px] overflow-hidden bg-black border border-white/10 h-full">
-      <img
+      <Image
         src={src}
         alt={alt}
-        // REMOVED fixed aspect ratio style to allow image to fill vertical space
+        width={600}
+        height={750}
+        priority
+        placeholder="blur"
+        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
         className="object-cover w-full h-full opacity-85 transition-opacity duration-500 group-hover:opacity-100"
         onError={(e) => {
-          e.currentTarget.src = "https://placehold.co/600x750/121212/22d3ee?text=Muhammed+Hasan";
+          const target = e.target as HTMLImageElement;
+          target.src = "/me/image.jpg";
         }}
       />
       <div className="absolute inset-0 [background:radial-gradient(circle_at_center,transparent_0%,transparent_50%,rgba(0,0,0,0.9)_100%)]" />
@@ -742,7 +748,7 @@ export default function AboutMe() {
             <div className="lg:col-span-5 h-full"> {/* ADDED h-full to the grid item */}
               <FadeIn delay={0.4} direction="up" className="h-full">
                 <FuturisticImageCard
-                  src="/b762b4c7-03b7-4d6e-a5b8-2793c381c0b5.jpeg"
+                  src="/me/b762b4c7-03b7-4d6e-a5b8-2793c381c0b5.jpeg"
                   alt="A portrait of Muhammed Hasan"
                 />
               </FadeIn>

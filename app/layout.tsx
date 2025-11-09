@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+
 const roboto = localFont({
   src: [
     {
@@ -15,13 +16,16 @@ const roboto = localFont({
     },
   ],
   display: "swap",
-  variable: "--font-roboto",
+  variable: "--font-roboto", // This creates the CSS variable
 });
 
 export const metadata: Metadata = {
   title: "Muhammed Hasan - Portfolio",
   description:
     "Mechanical Engineer & AI Researcher - Bridging Engineering Excellence with AI Innovation",
+  icons: {
+    icon: "/favicon.png", // Points to public/favicon.png
+  },
 };
 
 interface RootLayoutProps {
@@ -30,7 +34,9 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-<html lang="en" className={`${roboto.variable} dark`}>
+    <html lang="en" className={`${roboto.variable} dark`}>
+      {/* --- THIS IS THE FIX --- */}
+      {/* Added 'font-sans' to apply your custom Roboto font */}
       <body className="font-sans antialiased">{children}</body>
     </html>
   );

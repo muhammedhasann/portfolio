@@ -10,14 +10,7 @@ import { ModernSkills } from "@/components/modern-skills";
 
 // --- LAZY LOAD ALL HEAVY SECTIONS ---
 
-// This is your 3D/Vanta component. ssr: false is REQUIRED for it to work.
-const GeminiSection = dynamic(
-  () => import('@/components/google-gemini-effect').then(mod => mod.GeminiSection),
-  {
-    ssr: false, // Prevents server-side rendering
-    loading: () => <div className="h-screen w-full" /> // Placeholder to prevent layout shift
-  }
-);
+const GeminiSection = dynamic(() => import('@/components/google-gemini-effect').then(mod => mod.GeminiSection));
 
 // Lazy load your project/image galleries
 const ResearchSection = dynamic(() => import('@/components/research-section').then(mod => mod.ResearchSection));
@@ -32,11 +25,13 @@ const ContactSection = dynamic(() => import('@/components/contact-section'));
 // We rename the function to avoid conflicts
 export default function HomeClient() {
   return (
-    <main>
+    // --- THIS IS THE FIX ---
+    // Added className="relative" to fix the Framer Motion warning
+    <main className="relative">
       <div>
         {/* --- THESE LOAD FIRST AND FAST --- */}
         <HeroSection />
-        <GeminiSection />
+        <GeminiSection /> 
         <AboutMe />
         <ModernSkills />
 

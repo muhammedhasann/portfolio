@@ -54,7 +54,7 @@ Anyway, three days of developing fitness app but the backend needs more work. #t
   author: {
     name: "Muhammed Hasan",
     username: "Muhammed__Hasan",
-    profile_image_url: "image.jpeg?height=40&width=40",
+    profile_image_url: "/me/image.jpg?height=40&width=40",
     verified: true,
   },
   created_at: "2025-01-22T10:30:00.000Z",
@@ -148,7 +148,7 @@ const XCard = () => {
             <div className="flex items-center space-x-3">
               <motion.img
                 whileHover={{ scale: 1.1 }}
-                src="/image.jpeg"
+                src="/me/image.jpg"
                 alt={post.author.name}
                 className="w-12 h-12 rounded-full border-2 border-blue-400/50"
               />
