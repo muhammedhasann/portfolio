@@ -2,6 +2,7 @@
 
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 import * as LucideIcons from "lucide-react"; // Import all Lucide icons
+import { ReactNode } from "react"; // Explicit import for ReactNode
 
 // --- THEME COLORS ---
 // Primary: 'cyan'
@@ -10,20 +11,48 @@ import * as LucideIcons from "lucide-react"; // Import all Lucide icons
 // New: 'purple' (Introduced for Quantum/Nuclear)
 
 // =================================================================================
-// Utility Function for Class Names
+// Utility Function for Class Names (FIXED: Now supports string, falsy, and object maps)
 // =================================================================================
-const cn = (...classes) => classes.filter(Boolean).join(" ");
+// Define a type that cn can accept: string, falsy values, or an object map
+type ClassValue = string | undefined | null | false | { [key: string]: any };
+
+const cn = (...classes: ClassValue[]): string => {
+  const processedClasses: string[] = [];
+
+  for (const item of classes) {
+    if (typeof item === 'string') {
+      processedClasses.push(item);
+    } else if (typeof item === 'object' && item !== null) {
+      // Handle object: keys are class names, values are boolean conditions
+      for (const key in item) {
+        // Only include class if the value is truthy
+        if (Object.prototype.hasOwnProperty.call(item, key) && item[key]) {
+          processedClasses.push(key);
+        }
+      }
+    }
+  }
+
+  return processedClasses.filter(Boolean).join(" ");
+};
 
 // =================================================================================
 // Improved Badge Component
 // =================================================================================
-const Badge = ({ className, variant = "default", children, ...props }) => {
+interface BadgeProps {
+  className?: string;
+  variant?: "default" | "cyan" | "orange" | "blue" | "purple";
+  children: ReactNode;
+  [key: string]: any;
+}
+
+const Badge = ({ className, variant = "default", children, ...props }: BadgeProps) => {
   const variants = {
     default: "bg-gray-800/50 text-gray-300 border-gray-700/30",
     cyan: "bg-cyan-500/10 text-cyan-300 border-cyan-500/30",
     orange: "bg-orange-500/10 text-orange-300 border-orange-500/30",
     blue: "bg-blue-500/10 text-blue-300 border-blue-500/30",
-    purple: "bg-purple-500/10 text-purple-300 border-purple-500/30", // Added Purple
+    purple: "bg-purple-500/10 text-purple-300 border-purple-500/30",
   };
   return (
     <div
@@ -42,7 +71,12 @@ const Badge = ({ className, variant = "default", children, ...props }) => {
 // =================================================================================
 // Improved Section Badge (More colorful and dynamic)
 // =================================================================================
-const SectionBadge = ({ icon: Icon, text }) => (
+interface SectionBadgeProps {
+  icon: React.ComponentType<any>;
+  text: string;
+}
+
+const SectionBadge = ({ icon: Icon, text }: SectionBadgeProps) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.8 }}
     whileInView={{ opacity: 1, scale: 1 }}
@@ -64,20 +98,32 @@ const SectionBadge = ({ icon: Icon, text }) => (
 // =================================================================================
 // Improved Field Card (Glassmorphism + Glow)
 // =================================================================================
-const FieldCard = ({ children, delay = 0, fieldColor = "cyan" }) => {
+interface FieldCardProps {
+  children: ReactNode;
+  delay?: number;
+  fieldColor?: "cyan" | "orange" | "blue" | "purple";
+}
+
+const FieldCard = ({ children, delay = 0, fieldColor = "cyan" }: FieldCardProps) => {
   const fieldColors = {
     cyan: "hover:shadow-[0_0_50px_rgba(79,171,255,0.4)] hover:border-cyan-400/70",
     orange: "hover:shadow-[0_0_50px_rgba(249,115,22,0.4)] hover:border-orange-500/70",
     blue: "hover:shadow-[0_0_50px_rgba(59,130,246,0.4)] hover:border-blue-500/70",
-    purple: "hover:shadow-[0_0_50px_rgba(168,85,247,0.4)] hover:border-purple-500/70", // Added Purple
+    purple: "hover:shadow-[0_0_50px_rgba(168,85,247,0.4)] hover:border-purple-500/70",
   };
 
-  // Toned down dot pattern for a sleeker look
   const dotColors = {
     cyan: "bg-[radial-gradient(circle_at_center,rgba(79,171,255,0.05)_1px,transparent_1px)]",
     orange: "bg-[radial-gradient(circle_at_center,rgba(249,115,22,0.05)_1px,transparent_1px)]",
     blue: "bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.05)_1px,transparent_1px)]",
-    purple: "bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.05)_1px,transparent_1px)]", // Added Purple
+    purple: "bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.05)_1px,transparent_1px)]",
+  };
+
+  const ringColors = {
+    cyan: "#0ea5e9",
+    orange: "#f97316", 
+    blue: "#3b82f6",
+    purple: "#a855f7",
   };
 
   return (
@@ -92,12 +138,13 @@ const FieldCard = ({ children, delay = 0, fieldColor = "cyan" }) => {
       <div
         className={`absolute inset-0 ${dotColors[fieldColor]} bg-[size:15px_15px] opacity-10 group-hover:opacity-10 transition-opacity duration-500`}
       />
-      {/* Subtle Gradient Ring Glow */}
+      {/* Subtle Gradient Ring Glow - Fixed inline style */}
       <div
         className={`absolute inset-0 rounded-3xl ring-2 ring-inset ring-transparent group-hover:ring-current transition-all duration-700`}
         style={{
-          '--tw-ring-color': fieldColor === 'cyan' ? '#0ea5e9' : fieldColor === 'orange' ? '#f97316' : fieldColor === 'blue' ? '#3b82f6' : '#a855f7',
-        }}
+          // @ts-ignore - Custom CSS property for ring color
+          '--tw-ring-color': ringColors[fieldColor],
+        } as React.CSSProperties}
       />
       <div className="relative z-10 h-full">{children}</div>
     </motion.div>
@@ -107,7 +154,14 @@ const FieldCard = ({ children, delay = 0, fieldColor = "cyan" }) => {
 // =================================================================================
 // Section Header Component
 // =================================================================================
-const SectionHeader = ({ badgeIcon, badgeText, title, subtitle }) => (
+interface SectionHeaderProps {
+  badgeIcon: React.ComponentType<any>;
+  badgeText: string;
+  title: string | ReactNode;
+  subtitle?: string | ReactNode;
+}
+
+const SectionHeader = ({ badgeIcon, badgeText, title, subtitle }: SectionHeaderProps) => (
   <div className="text-center mb-16">
     <SectionBadge icon={badgeIcon} text={badgeText} />
     <motion.h2
@@ -136,7 +190,14 @@ const SectionHeader = ({ badgeIcon, badgeText, title, subtitle }) => (
 // =================================================================================
 // Improved Research Timeline
 // =================================================================================
-const ResearchTimeline = ({ children, delay = 0, isLast = false, icon: Icon }) => (
+interface ResearchTimelineProps {
+  children: ReactNode;
+  delay?: number;
+  isLast?: boolean;
+  icon: React.ComponentType<any>;
+}
+
+const ResearchTimeline = ({ children, delay = 0, isLast = false, icon: Icon }: ResearchTimelineProps) => (
   <motion.div
     initial={{ opacity: 0, x: -50 }}
     whileInView={{ opacity: 1, x: 0 }}
@@ -145,11 +206,9 @@ const ResearchTimeline = ({ children, delay = 0, isLast = false, icon: Icon }) =
     className="relative flex items-start gap-6 py-8"
   >
     <div className="flex flex-col items-center min-w-[40px] z-10">
-      {/* Dynamic, brighter dot */}
       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-cyan-500 flex items-center justify-center border-2 border-black shadow-xl shadow-cyan-500/30">
         <Icon className="w-4 h-4 text-black font-extrabold" />
       </div>
-      {/* Animated line */}
       {!isLast && (
         <motion.div
           initial={{ height: 0 }}
@@ -167,7 +226,16 @@ const ResearchTimeline = ({ children, delay = 0, isLast = false, icon: Icon }) =
 // =================================================================================
 // Achievement Card (Glass & Glow)
 // =================================================================================
-const AchievementCard = ({ icon: Icon, title, description, impact, delay, color }) => {
+interface AchievementCardProps {
+  icon: React.ComponentType<any>;
+  title: string;
+  description: string;
+  impact: string;
+  delay?: number;
+  color: "cyan" | "orange" | "blue" | "purple";
+}
+
+const AchievementCard = ({ icon: Icon, title, description, impact, delay, color }: AchievementCardProps) => {
   const colors = {
     cyan: { text: "text-cyan-400", border: "border-cyan-400/10", shadow: "hover:shadow-[0_0_30px_rgba(79,171,255,0.3)]" },
     orange: { text: "text-orange-400", border: "border-orange-400/10", shadow: "hover:shadow-[0_0_30px_rgba(249,115,22,0.3)]" },
@@ -199,21 +267,29 @@ const AchievementCard = ({ icon: Icon, title, description, impact, delay, color 
 // =================================================================================
 // Modern Card with Mouse-Following Spotlight (Optimized)
 // =================================================================================
-const ModernCard = ({ children, delay = 0, color = "cyan" }) => {
+interface ModernCardProps {
+  children: ReactNode;
+  delay?: number;
+  color?: "cyan" | "orange" | "blue" | "purple";
+  className?: string;
+  variant?: string;
+}
+
+const ModernCard = ({ children, delay = 0, color = "cyan", className, variant }: ModernCardProps) => {
   let mouseX = useMotionValue(0);
   let mouseY = useMotionValue(0);
 
-  function handleMouseMove({ currentTarget, clientX, clientY }) {
+  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent<HTMLDivElement>) {
     let { left, top } = currentTarget.getBoundingClientRect();
     mouseX.set(clientX - left);
     mouseY.set(clientY - top);
   }
 
   const colorStops = {
-    cyan: "#0ea5e9", // cyan-500
-    orange: "#f97316", // orange-500
-    blue: "#3b82f6", // blue-500
-    purple: "#a855f7", // purple-500
+    cyan: "#0ea5e9",
+    orange: "#f97316",
+    blue: "#3b82f6", 
+    purple: "#a855f7",
   };
 
   const borderMask = useMotionTemplate`
@@ -238,7 +314,10 @@ const ModernCard = ({ children, delay = 0, color = "cyan" }) => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.6 }}
       viewport={{ once: true, amount: 0.1 }}
-      className={`group relative w-full h-full rounded-2xl border border-white/10 bg-black/50 p-8 text-center shadow-xl shadow-black/40 transition-all duration-500 backdrop-blur-md hover:scale-[1.03]`}
+      className={cn(
+        `group relative w-full h-full rounded-2xl border border-white/10 bg-black/50 p-8 text-center shadow-xl shadow-black/40 transition-all duration-500 backdrop-blur-md hover:scale-[1.03]`,
+        className
+      )}
       onMouseMove={handleMouseMove}
     >
       {/* Mouse-following spotlight background */}
@@ -248,51 +327,33 @@ const ModernCard = ({ children, delay = 0, color = "cyan" }) => {
           background: useMotionTemplate`
             radial-gradient(
               300px at ${mouseX}px ${mouseY}px,
-              ${colorStops[color]}25, /* Toned down opacity */
+              ${colorStops[color]}25,
               transparent 80%
             )
           `,
         }}
       />
 
-      {/* Dynamic Border Glow (FIXED: Using a solid border layer masked by motion template) */}
+      {/* Dynamic Border Glow */}
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-500 group-hover:opacity-100"
         style={{
-          // Apply the spotlight shape as a mask
           maskImage: borderMask,
           WebkitMaskImage: borderMask,
-          // Use a thick, slightly glowing border color that will be revealed by the mask
-          background: borderBackground, // Use the gradient for the background color
+          background: borderBackground,
           boxShadow: `0 0 15px ${colorStops[color]}50`,
-          // IMPORTANT: Create the actual border effect using a mask to only reveal the edge
-          // The background should be the color, and the mask should be a gradient
-          // with a transparent center and opaque edges, which is too complex for this
-          // simple fix. A simpler approach is to use a masked, colored div.
-
-          // **REVISED FIX** - A simpler way to get the *glow* effect
-          // We apply the color as a transparent background with a box-shadow glow
-          // that is masked by the motion template.
-          boxShadow: `0 0 15px ${colorStops[color]}50`,
-          // For the *border line* effect, the previous approach was fundamentally flawed.
-          // The 'border' property cannot be applied with a mask. We will rely on the box-shadow glow.
-          // A faint border will remain from the original container.
         }}
       />
-      {/* Adding a secondary motion.div for the *masked border line* effect for better visual fidelity */}
+
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-500 group-hover:opacity-100"
         style={{
           maskImage: borderMask,
           WebkitMaskImage: borderMask,
-          // This div acts as the actual border line, colored by the colorStops.
-          // The mask will reveal the circular pattern.
           background: colorStops[color],
-          // Use a small border to clip the background, leaving a thin line revealed by the mask
-          border: '1px solid transparent', // Use a small border to clip the background
+          border: '1px solid transparent',
         }}
       />
-
 
       <div className="absolute inset-0 rounded-2xl opacity-[0.03]" />
 
@@ -303,18 +364,28 @@ const ModernCard = ({ children, delay = 0, color = "cyan" }) => {
     </motion.div>
   );
 };
+
 // =================================================================================
 // Improved Data Panel Item (Modernized values)
 // =================================================================================
-const DataPanelItem = ({ icon: Icon, title, value, description, color = "cyan", delay = 0 }) => {
+interface DataPanelItemProps {
+  icon: React.ComponentType<any>;
+  title: string;
+  value: string;
+  description: string;
+  color?: "cyan" | "orange" | "blue" | "purple";
+  delay?: number;
+}
+
+const DataPanelItem = ({ icon: Icon, title, value, description, color = "cyan", delay = 0 }: DataPanelItemProps) => {
   const colorClasses = {
     cyan: { bg: "bg-cyan-500/10", border: "hover:border-cyan-400/70", value: "text-cyan-400", icon: "text-cyan-400" },
     orange: { bg: "bg-orange-500/10", border: "hover:border-orange-500/70", value: "text-orange-400", icon: "text-orange-400" },
-    // You may want to add 'blue' and 'purple' here if they are intended to be used:
-    // blue: { bg: "bg-blue-500/10", border: "hover:border-blue-500/70", value: "text-blue-400", icon: "text-blue-400" },
-    // purple: { bg: "bg-purple-500/10", border: "hover:border-purple-500/70", value: "text-purple-400", icon: "text-purple-400" },
+    blue: { bg: "bg-blue-500/10", border: "hover:border-blue-500/70", value: "text-blue-400", icon: "text-blue-400" },
+    purple: { bg: "bg-purple-500/10", border: "hover:border-purple-500/70", value: "text-purple-400", icon: "text-purple-400" },
   };
-  const classes = colorClasses[color] || colorClasses.cyan; // Fallback to cyan
+  const classes = colorClasses[color] || colorClasses.cyan;
+  
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -349,7 +420,14 @@ const DataPanelItem = ({ icon: Icon, title, value, description, color = "cyan", 
 // =================================================================================
 // Improved Action Button (More dynamic gradient)
 // =================================================================================
-const ActionButton = ({ children, icon: Icon, variant = "primary", ...props }) => {
+interface ActionButtonProps {
+  children: ReactNode;
+  icon?: React.ComponentType<any>;
+  variant?: "primary" | "secondary";
+  [key: string]: any;
+}
+
+const ActionButton = ({ children, icon: Icon, variant = "primary", ...props }: ActionButtonProps) => {
   const baseClasses =
     "group relative inline-flex items-center justify-center gap-2.5 " +
     "overflow-hidden rounded-full h-14 px-8 text-base font-bold " +
@@ -382,28 +460,31 @@ const ActionButton = ({ children, icon: Icon, variant = "primary", ...props }) =
 // =================================================================================
 // Improved Futuristic Image Card (Removed grid overlay)
 // =================================================================================
-const FuturisticImageCard = ({ src, alt }) => (
-  <div className="relative p-1.5 rounded-3xl bg-gradient-to-br from-cyan-500/50 via-orange-500/30 to-transparent backdrop-blur-sm shadow-2xl shadow-black/70">
-    {/* Enhanced Pulsing Glow */}
+interface FuturisticImageCardProps {
+  src: string;
+  alt: string;
+}
+
+const FuturisticImageCard = ({ src, alt }: FuturisticImageCardProps) => (
+  // ADDED h-full to the outer container to force vertical stretch
+  <div className="relative p-1.5 rounded-3xl bg-gradient-to-br from-cyan-500/50 via-orange-500/30 to-transparent backdrop-blur-sm shadow-2xl shadow-black/70 h-full">
     <motion.div
       animate={{ opacity: [0.4, 0.8, 0.4] }}
       transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       className="absolute -inset-1 rounded-[22px] bg-gradient-to-br from-cyan-500/60 to-orange-500/60 blur-xl"
     />
-    {/* Image Container */}
-    <div className="relative rounded-[20px] overflow-hidden bg-black border border-white/10">
+    {/* ADDED h-full to the inner container */}
+    <div className="relative rounded-[20px] overflow-hidden bg-black border border-white/10 h-full">
       <img
         src={src}
         alt={alt}
+        // REMOVED fixed aspect ratio style to allow image to fill vertical space
         className="object-cover w-full h-full opacity-85 transition-opacity duration-500 group-hover:opacity-100"
-        style={{ aspectRatio: '4/5' }} // Enforce a modern aspect ratio
         onError={(e) => {
           e.currentTarget.src = "https://placehold.co/600x750/121212/22d3ee?text=Muhammed+Hasan";
         }}
       />
-      {/* Enhanced vignette */}
-      {/* FIX: Ensure 'bg-gradient-radial' is available or define a custom gradient */}
-      <div className="absolute inset-0 [background-image:radial-gradient(circle_at_center,transparent_0%,transparent_50%,rgba(0,0,0,0.9)_100%)]" />
+      <div className="absolute inset-0 [background:radial-gradient(circle_at_center,transparent_0%,transparent_50%,rgba(0,0,0,0.9)_100%)]" />
     </div>
   </div>
 );
@@ -411,7 +492,15 @@ const FuturisticImageCard = ({ src, alt }) => (
 // =================================================================================
 // Improved FadeIn
 // =================================================================================
-const FadeIn = ({ children, delay = 0, duration = 0.7, direction = "up" }) => {
+interface FadeInProps {
+  children: ReactNode;
+  delay?: number;
+  duration?: number;
+  direction?: "up" | "left";
+  className?: string; // ADDED className prop
+}
+
+const FadeIn = ({ children, delay = 0, duration = 0.7, direction = "up", className }: FadeInProps) => { // ACCEPTED className
   const variants = {
     up: { initial: { opacity: 0, y: 15 }, animate: { opacity: 1, y: 0 } },
     left: { initial: { opacity: 0, x: -15 }, animate: { opacity: 1, x: 0 } },
@@ -422,6 +511,7 @@ const FadeIn = ({ children, delay = 0, duration = 0.7, direction = "up" }) => {
       whileInView={variants[direction].animate}
       viewport={{ once: true, amount: 0.1 }}
       transition={{ delay, duration, ease: "easeInOut" }}
+      className={cn(className)} // APPLIED className
     >
       {children}
     </motion.div>
@@ -463,25 +553,25 @@ const researchAreas = [
     icon: LucideIcons.BatteryCharging,
     title: "Energy Storage",
     description: "Developing novel supercapacitors from food waste, achieving 7.98 F/g.",
-    color: "cyan",
+    color: "cyan" as const,
   },
   {
     icon: LucideIcons.Bot,
     title: "Robotics & Automation",
     description: "Mentoring 20+ students in applied robotics and control systems at T3 Foundation.",
-    color: "orange",
+    color: "orange" as const,
   },
   {
     icon: LucideIcons.BrainCircuit,
     title: "AI & Data Science",
     description: "Building predictive models for energy systems and applying AI to thermal management.",
-    color: "blue",
+    color: "blue" as const,
   },
   {
     icon: LucideIcons.Atom,
     title: "Quantum & Nuclear",
     description: "Exploring QNNs for energy solutions and research in next-gen nuclear paradigms.",
-    color: "purple", // New color for distinction
+    color: "purple" as const,
   },
 ];
 
@@ -491,21 +581,21 @@ const achievements = [
     title: "Teknofest National Finalist (x2)",
     description: "Led teams to national finals for Nuclear Energy Design and EV Battery Thermal Management (Arctic team).",
     impact: "Top Tier Recognition",
-    color: "cyan",
+    color: "cyan" as const,
   },
   {
     icon: LucideIcons.Award,
     title: "3rd Place Winner, YES Challenge",
     description: "Led the EcoEnergy team to a national 3rd place for a sustainable supercapacitor business model.",
     impact: "National Award",
-    color: "orange",
+    color: "orange" as const,
   },
   {
     icon: LucideIcons.BookOpen,
     title: "Published Conference Researcher",
     description: "Authored and presented two papers at international conferences on PV temperature models and Li-ion battery thermal performance.",
     impact: "2x Publications",
-    color: "blue", // Changed color for better balance
+    color: "blue" as const,
   },
 ];
 
@@ -514,7 +604,6 @@ const achievements = [
 // =================================================================================
 export default function AboutMe() {
   return (
-    // --- PURE BLACK BACKGROUND ---
     <section id="about-me" className="relative overflow-hidden bg-black py-20 md:py-32">
       {/* Subtle Tech Grid Overlay (Very Low Opacity) */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(79,171,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(79,171,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] z-0 opacity-10" />
@@ -566,36 +655,18 @@ export default function AboutMe() {
                 </span>
               </h1>
               <p className="text-xl text-gray-200 leading-relaxed max-w-2xl">
-                I am a              <span className="text-cyan-400 font-bold">
-
-                   Mechanical Engineer
-
-                </span> focused on the next generation of
-                energy. My work integrates <span className="text-orange-400 font-bold">
-
-
-
-                   AI and robotics
-
-
-
-                </span> with practical
+                I am a <span className="text-cyan-400 font-bold">Mechanical Engineer</span> focused on the next generation of
+                energy. My work integrates <span className="text-orange-400 font-bold">AI and robotics</span> with practical
                 engineering to develop sustainable solutions in{" "}
-                <span className="text-cyan-400 font-bold">
-                  energy storage
-                </span>{" "}
-                and{" "}
-                <span className="text-orange-400 font-bold">
-                  renewable systems
-                </span>
-                .
+                <span className="text-cyan-400 font-bold">energy storage</span> and{" "}
+                <span className="text-orange-400 font-bold">renewable systems</span>.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 {[
-                  { icon: LucideIcons.Battery, text: "Energy Storage", color: "cyan" },
-                  { icon: LucideIcons.Bot, text: "Robotics & AI", color: "orange" },
-                  { icon: LucideIcons.Network, text: "Quantum Tech", color: "purple" },
-                  { icon: LucideIcons.Leaf, text: "Sustainable Futures", color: "blue" },
+                  { icon: LucideIcons.Battery, text: "Energy Storage", color: "cyan" as const },
+                  { icon: LucideIcons.Bot, text: "Robotics & AI", color: "orange" as const },
+                  { icon: LucideIcons.Network, text: "Quantum Tech", color: "purple" as const },
+                  { icon: LucideIcons.Leaf, text: "Sustainable Futures", color: "blue" as const },
                 ].map((item, index) => (
                   <Badge key={index} variant={item.color}>
                     <item.icon className="w-4 h-4 mr-2" />
@@ -664,18 +735,21 @@ export default function AboutMe() {
             title="A Personal Introduction"
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            {/* Image Card */}
-            <div className="lg:col-span-5">
-              <FadeIn delay={0.4} direction="up">
+          {/* Corrected: using items-stretch and h-full on containers for matching height */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-stretch"> 
+            
+            {/* Image Card (lg:col-span-5) */}
+            <div className="lg:col-span-5 h-full"> {/* ADDED h-full to the grid item */}
+              <FadeIn delay={0.4} direction="up" className="h-full">
                 <FuturisticImageCard
                   src="/b762b4c7-03b7-4d6e-a5b8-2793c381c0b5.jpeg"
                   alt="A portrait of Muhammed Hasan"
                 />
               </FadeIn>
             </div>
-            {/* Text Content */}
-            <div className="lg:col-span-7">
+            
+            {/* Text Content (lg:col-span-7) */}
+            <div className="lg:col-span-7 h-full"> {/* ADDED h-full to the grid item */}
               <FadeIn delay={0.2} direction="up">
                 <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl mb-6">
                   My Journey So Far.
@@ -684,28 +758,16 @@ export default function AboutMe() {
               <FadeIn delay={0.3} direction="up">
                 <p className="text-lg leading-relaxed text-neutral-300 mb-8">
                   Hello! I'm a recent{" "}
-                  <span className="font-bold text-cyan-400">
-                    Mechanical Engineering 
-                  </span>
-                   {" "}graduate, complemented by an intensive{" "}
-                  <span className="font-bold text-orange-400">
-                    Backend Development
-                  </span>
-                 {" "} bootcamp. This dual background provides a unique perspective on
+                  <span className="font-bold text-cyan-400">Mechanical Engineering</span> graduate, complemented by an intensive{" "}
+                  <span className="font-bold text-orange-400">Backend Development</span> bootcamp. This dual background provides a unique perspective on
                   fusing physical systems with digital intelligence.
                   <br />
                   Currently, I'm working as an instructor and mentor, and{" "}
-                  <span className="font-bold text-orange-400">
-                    am actively seeking full-time
-                  </span>
-                 {" "} engineering roles or{" "} <span className="font-bold text-cyan-400">Master & Ph.D. opportunities </span>
-                
+                  <span className="font-bold text-orange-400">am actively seeking full-time</span> engineering roles or{" "} <span className="font-bold text-cyan-400">Master & Ph.D. opportunities </span>
                   in my core interests:{" "}
                   <span className="font-bold text-purple-400">
-                    AI, quantum computing, robotics, and sustainable energy
-                    systems
-                  </span>
-                  .
+                    AI, quantum computing, robotics, and sustainable energy systems
+                  </span>.
                 </p>
                 <div className="border-t border-white/10 pt-6 mt-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
                   <div className="text-gray-300">
@@ -732,7 +794,7 @@ export default function AboutMe() {
         
         {/* ====================================================================== */}
         {/* --- Core Research (Uses ModernCard) --- */}
-        {/* ====================================================================== */}
+        {/* ====================================================================== */}        
         <div className="mb-28 md:mb-40">
           <SectionHeader
             badgeIcon={LucideIcons.BrainCircuit}
@@ -791,7 +853,6 @@ export default function AboutMe() {
                 isLast={index === education.length - 1}
                 icon={index === 0 ? LucideIcons.GraduationCap : index === 1 ? LucideIcons.Leaf : LucideIcons.Code}
               >
-                {/* Delay adjusted so FieldCard doesn't appear before timeline icon */}
                 <FieldCard
                   delay={0.5 + index * 0.2}  
                   fieldColor={index % 2 === 0 ? "cyan" : "orange"}

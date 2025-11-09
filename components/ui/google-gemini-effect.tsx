@@ -4,9 +4,12 @@ import { motion, MotionValue } from "framer-motion";
 import React from "react";
 import { ArrowRight, Cpu } from "lucide-react"; // Import Cpu
 
+// FIX: Define the transition object with 'ease' explicitly set as the Easing string literal,
+// or import the Transition type for better clarity. Since 'linear' is used, we just need
+// to ensure the type aligns with framer-motion's expectations.
 const transition = {
   duration: 0,
-  ease: "linear",
+  ease: "linear" as const, // Telling TypeScript this specific string is the expected type
 };
 
 export const GoogleGeminiEffect = ({
@@ -15,7 +18,7 @@ export const GoogleGeminiEffect = ({
   description,
   className,
 }: {
-  pathLengths: MotionValue[];
+  pathLengths: MotionValue<number>[]; // Added generic type to MotionValue for better TS inference
   title?: string;
   description?: string;
   className?: string;

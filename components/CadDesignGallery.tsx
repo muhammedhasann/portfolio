@@ -72,7 +72,7 @@ interface CadCardProps {
   onImageClick: (
     design: Design,
     index: number,
-    ref: React.RefObject<HTMLDivElement>
+    ref: React.RefObject<HTMLDivElement | null>
   ) => void;
 }
 
@@ -274,7 +274,8 @@ const cadDesigns: Design[] = [
     ],
     status: "Conceptual", // 'Conceptual' fits well here
   },
-];const allCategories = ["All", ...new Set(cadDesigns.map((d) => d.status))];
+];
+const allCategories = ["All", ...new Set(cadDesigns.map((d) => d.status))];
 const springConfig: SpringOptions = { stiffness: 150, damping: 20, mass: 1 };
 
 /* ---------------------------------- */
@@ -415,19 +416,39 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
   strength = 30,
 }) => {
   const ref = useRef<HTMLButtonElement>(null);
-  const pos = useSpring({ x: 0, y: 0 }, springConfig);
+  
+  // --- FIX START ---
+  // We need two separate springs, one for x and one for y.
+  // The useSpring hook takes a number as its initial value, not an object.
+  const x = useSpring(0, springConfig);
+  const y = useSpring(0, springConfig);
+  // const pos = useSpring({ x: 0, y: 0 }, springConfig); // <-- This was the line with the error
+  // --- FIX END ---
 
   const onMouseMove = (e: React.MouseEvent) => {
     if (!ref.current) return;
     const { clientX, clientY } = e;
     const { width, height, left, top } = ref.current.getBoundingClientRect();
-    const x = clientX - (left + width / 2);
-    const y = clientY - (top + height / 2);
-    pos.set({ x: x * (strength / 100), y: y * (strength / 100) });
+
+    // --- FIX START ---
+    // Calculate mouse position relative to the button center
+    const mouseX = clientX - (left + width / 2);
+    const mouseY = clientY - (top + height / 2);
+    
+    // Set the x and y springs individually
+    x.set(mouseX * (strength / 100));
+    y.set(mouseY * (strength / 100));
+    // pos.set({ x: x * (strength / 100), y: y * (strength / 100) }); // <-- This was the old line
+    // --- FIX END ---
   };
 
   const onMouseLeave = () => {
-    pos.set({ x: 0, y: 0 });
+    // --- FIX START ---
+    // Reset both x and y springs to 0
+    x.set(0);
+    y.set(0);
+    // pos.set({ x: 0, y: 0 }); // <-- This was the old line
+    // --- FIX END ---
   };
 
   return (
@@ -438,7 +459,11 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
       aria-label={ariaLabel}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      style={{ x: pos.x, y: pos.y }}
+      // --- FIX START ---
+      // Apply the x and y springs directly to the style
+      style={{ x, y }}
+      // style={{ x: pos.x, y: pos.y }} // <-- This was the old line
+      // --- FIX END ---
       transition={springConfig}
     >
       {children}
@@ -720,7 +745,7 @@ export default function CadDesignGallery(): JSX.Element {
     initialIndex: number;
   } | null>(null);
   const [triggerRef, setTriggerRef] =
-    useState<React.RefObject<HTMLDivElement> | null>(null);
+    useState<React.RefObject<HTMLDivElement | null> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All");
 
@@ -734,7 +759,7 @@ export default function CadDesignGallery(): JSX.Element {
     (
       design: Design,
       idx: number,
-      ref: React.RefObject<HTMLDivElement>
+      ref: React.RefObject<HTMLDivElement | null>
     ) => {
       setModalState({ design, initialIndex: idx });
       setTriggerRef(ref);
