@@ -16,8 +16,8 @@ const WelcomeBadge = () => (
   <motion.div
     initial={{ opacity: 0, y: -30 }}
     animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
-    // --- FIX: Removed the shadow-[...] class ---
+    // --- FIX: Removed delay to make it appear instantly ---
+    transition={{ duration: 0.7, delay: 0, ease: "easeOut" }}
     className="group relative mb-12 inline-flex items-center gap-4 overflow-hidden rounded-full border border-white/20 bg-black/50 px-6 py-3 backdrop-blur-md"
   >
     <div className="absolute inset-0 z-0 -translate-y-[100%] animate-[aurora_6s_infinite] bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.3)_50%,rgba(255,255,255,0.05)_100%)]" />
@@ -40,7 +40,8 @@ const CTAs = () => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, delay: 1.2 }} // This delay is OK, as it's not the LCP
+    // --- FIX: Significantly reduced delay to make buttons appear quickly ---
+    transition={{ duration: 0.6, delay: 0.2 }} 
     className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
   >
     <a
@@ -51,7 +52,7 @@ const CTAs = () => (
       <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
     </a>
     <a
-      href="/Muhammed_Hasan (1).pdf"
+      href="/MUhammed_Hasan_CV.pdf"
       target="_blank"
       rel="noopener noreferrer"
       className="group relative inline-flex h-14 w-full sm:w-auto items-center justify-center rounded-full border border-white/20 bg-white/5 px-8 font-medium text-slate-200 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-cyan-400/50 hover:bg-cyan-400/10 hover:text-white"
@@ -66,7 +67,7 @@ const CTAs = () => (
 export default function HeroSection() {
   const [index, setIndex] = useState(0);
   
-  // --- FIX 1: Add isMounted state to prevent hydration error ---
+  // This state is important to prevent a hydration mismatch error
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -78,14 +79,14 @@ export default function HeroSection() {
   }, []); // Empty dependency array is correct
 
   return (
-    // --- FIX: Pure black background (already set with bg-black) ---
     <section className="relative flex min-h-screen w-full overflow-hidden bg-black antialiased items-center justify-center pt-24 pb-20 md:pt-0">
       
       <div className="relative z-30 mx-auto w-full max-w-7xl p-4 md:p-8 text-center">
+        {/* This will now appear instantly */}
         <WelcomeBadge />
 
-        {/* --- FIX 2: Hydration & CLS Fix --- */}
-        <div className="h-[84px] md:h-[108px] lg:h-[160px]"> {/* This div prevents layout shift */}
+        {/* This div container prevents the layout from shifting when the title changes height */}
+        <div className="h-[84px] md:h-[108px] lg:h-[160px]"> 
           {isMounted ? (
             <AnimatePresence mode="wait">
               <motion.h1
@@ -102,7 +103,7 @@ export default function HeroSection() {
             </AnimatePresence>
           ) : (
             // Render a static h1 on the server and initial client load
-            // This MUST match what the server would render (index 0)
+            // This prevents hydration errors and layout shift
             <h1
               className="bg-clip-text text-7xl font-extrabold text-transparent md:text-9xl lg:text-[10rem] leading-none tracking-tighter"
               style={{ backgroundImage: "linear-gradient(to top, #ffffff, #94a3b8)" }}
@@ -112,19 +113,14 @@ export default function HeroSection() {
           )}
         </div>
 
-        {/* ================================================================
-          LCP FIX:
-          The <motion.p> was converted to a standard <p> tag.
-          The animation (initial, animate, transition) was removed.
-          This element will now render instantly, fixing the LCP.
-          ================================================================
-        */}
+        {/* This paragraph is not animated, so it will appear instantly, which is good for LCP. */}
         <p
           className="mx-auto mt-8 max-w-4xl text-xl font-light leading-loose text-slate-300 md:text-2xl"
         >
           Engineering realities yet to be observed—where atoms, algorithms and aesthetics converge to power the next century.
         </p>
         
+        {/* These buttons will now appear much sooner */}
         <CTAs />
       </div>
     </section>
