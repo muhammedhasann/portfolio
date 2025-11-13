@@ -52,7 +52,7 @@ const CTAs = () => (
       <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
     </a>
     <a
-      href="/MUhammed_Hasan_CV.pdf"
+      href="/Muhammed_Hasan_CV.pdf"
       target="_blank"
       rel="noopener noreferrer"
       className="group relative inline-flex h-14 w-full sm:w-auto items-center justify-center rounded-full border border-white/20 bg-white/5 px-8 font-medium text-slate-200 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-cyan-400/50 hover:bg-cyan-400/10 hover:text-white"
