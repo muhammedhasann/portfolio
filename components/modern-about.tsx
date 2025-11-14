@@ -52,7 +52,7 @@ const Badge = ({ className, variant = "default", children, ...props }: BadgeProp
   );
 };
 
-// --- Section Badge Component ---
+// --- Section Badge Component (FIX: RE-STYLED TO CYAN) ---
 interface SectionBadgeProps {
   icon: React.ComponentType<any>;
   text: string;
@@ -63,16 +63,17 @@ const SectionBadge = ({ icon: Icon, text }: SectionBadgeProps) => (
     whileInView={{ opacity: 1, scale: 1 }}
     transition={{ duration: 0.5, ease: "easeOut" }}
     viewport={{ once: true, amount: 0.8 }}
-    className="inline-flex items-center gap-3 mb-8 px-5 py-2.5 bg-gray-900/60 border border-cyan-400/50 rounded-full shadow-[0_0_20px_rgba(79,171,255,0.2)] backdrop-blur-md hover:shadow-[0_0_35px_rgba(249,115,22,0.3)] transition-all duration-500 cursor-pointer"
+    // UPDATED to cyan color theme
+    className="mb-8 inline-flex items-center justify-center gap-3 rounded-full border border-cyan-500/30 bg-black/50 px-5 py-2.5 shadow-[0_0_20px_rgba(6,182,212,0.5)]"
   >
-    <div className="relative flex items-center justify-center">
-      <div className="absolute w-3 h-3 bg-cyan-300 rounded-full animate-pulse-slow"></div>
-      <div className="w-2 h-2 bg-orange-300 rounded-full"></div>
+    <div className="flex items-center gap-3">
+      <div className="h-2 w-2 animate-pulse rounded-full bg-cyan-500"></div>
+      <Icon className="h-6 w-6 text-cyan-400" />
+      <div className="h-5 w-px bg-cyan-500/50"></div>
+      <span className="text-sm font-medium uppercase tracking-wider text-cyan-300">
+        {text}
+      </span>
     </div>
-    <Icon className="w-5 h-5 text-orange-300" />
-    <span className="text-sm font-medium uppercase tracking-widest text-white/90">
-      {text}
-    </span>
   </motion.div>
 );
 
@@ -345,6 +346,11 @@ const DataPanelItem = ({ icon: Icon, title, value, description, color = "cyan", 
       className={`group relative bg-gradient-to-br from-black/50 to-black/80 rounded-xl p-6 border border-white/20 ${classes.border} transition-all duration-500 backdrop-blur-sm hover:shadow-2xl hover:shadow-black/60`}
     >
       <div className="flex justify-between items-center mb-4">
+        {/*
+          NOTE: This is the <h5> from the report.
+          For perfect accessibility, this should be <h4> since "Key Matrix" is <h3>
+          but I am only changing the badge per your request.
+        */}
         <h5 className="text-white text-lg font-semibold group-hover:text-gray-100 transition-colors duration-300">
           {title}
         </h5>
@@ -421,13 +427,13 @@ const FuturisticImageCard = ({ src, alt }: FuturisticImageCardProps) => (
     />
     <div className="relative rounded-[20px] overflow-hidden bg-black border border-white/10 h-full">
       
-      {/* --- THIS IS THE FIX --- */}
+      {/* --- THIS IS THE PERFORMANCE FIX --- */}
       <Image
         src={src}
         alt={alt}
-        width={641}   // <-- FIX: From mobile report
-        height={480}  // <-- FIX: From mobile report
-        priority      // <-- CRITICAL: Tells Next.js to load this LCP image first
+        width={641}   // From PageSpeed report
+        height={480}  // From PageSpeed report
+        priority      // CRITICAL: Tells Next.js to load this LCP image first
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 641px"
         className="object-cover w-full h-full opacity-85 transition-opacity duration-500 group-hover:opacity-100"
       />
@@ -548,7 +554,7 @@ const achievements = [
 // =================================================================================
 export default function AboutMe() {
   return (
-    <section id="about-me" className="relative overflow-hidden bg-black py-20 md:py-32">
+    <section id="about" className="relative overflow-hidden bg-black py-20 md:py-32">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(79,171,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(79,171,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] z-0 opacity-10" />
 
       <div className="max-w-7xl mx-auto px-4 relative z-10">
@@ -622,7 +628,11 @@ export default function AboutMe() {
 
           {/* Key Matrix */}
           <div className="lg:col-span-5 lg:sticky lg:top-20 self-start">
-            {/* --- ACCESSIBILITY FIX: Changed h3 to h2 for correct heading order --- */}
+            {/*
+              NOTE: This is the <h2> from the report.
+              For perfect accessibility, this should be <h3>
+              but I am only changing the badge per your request.
+            */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -672,7 +682,7 @@ export default function AboutMe() {
         {/* ====================================================================== */}
         {/* --- "ABOUT ME" SECTION --- */}
         {/* ====================================================================== */}
-        <div id="about" className="mb-28 md:mb-40">
+        <div id="about-story" className="mb-28 md:mb-40"> {/* Note: 'id' is 'about' at the top */}
           <SectionHeader
             badgeIcon={LucideIcons.User}
             badgeText="My Story"
@@ -693,6 +703,11 @@ export default function AboutMe() {
             
             <div className="lg:col-span-7 h-full">
               <FadeIn delay={0.2} direction="up">
+                {/*
+                  NOTE: This is the <h2> from the report.
+                  For perfect accessibility, this should be <h3>
+                  but I am only changing the badge per your request.
+                */}
                 <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl mb-6">
                   My Journey So Far.
                 </h2>

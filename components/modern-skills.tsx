@@ -86,15 +86,15 @@ const SectionBadge = () => (
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5 }}
     viewport={{ once: true, amount: 0.5 }}
-    className="inline-flex items-center gap-3 mb-8 px-6 py-2.5 bg-black/50 border border-cyan-500/40 rounded-full shadow-[0_0_30px_rgba(34,211,238,0.4)] backdrop-blur-sm"
+    className="inline-flex items-center gap-3 mb-8 px-6 py-2.5 bg-black/50 border border-yellow-500/40 rounded-full shadow-[0_0_30px_rgba(34,211,238,0.4)] backdrop-blur-sm"
   >
     <div className="relative flex items-center justify-center">
-      <div className="absolute w-3 h-3 bg-cyan-400 rounded-full animate-ping" />
-      <div className="w-2 h-2 bg-cyan-400 rounded-full" />
+      <div className="absolute w-3 h-3 bg-yellow-400 rounded-full animate-ping" />
+      <div className="w-2 h-2 bg-yellow-400 rounded-full" />
     </div>
-    <FiHexagon className="w-5 h-5 text-cyan-400" />
-    <div className="w-px h-5 bg-cyan-500/40" />
-    <span className="text-sm font-medium text-cyan-200 tracking-wider uppercase">
+    <FiHexagon className="w-5 h-5 text-yellow-400" />
+    <div className="w-px h-5 bg-yellow-500/40" />
+    <span className="text-sm font-medium text-yellow-200 tracking-wider uppercase">
       Technical Expertise Matrix
     </span>
   </motion.div>
@@ -118,7 +118,7 @@ const SkillCard = ({ skill }: { skill: any }) => {
       <div
         className={`relative bg-gradient-to-r ${color} p-[1.5px] rounded-xl hover:shadow-lg transition-all duration-300 backdrop-blur-lg`}
       >
-        <div className="bg-gray-900/80 backdrop-blur-lg rounded-[10px] p-4 h-full flex items-center gap-4 border border-white/10 hover:border-cyan-400/30 transition-colors">
+        <div className="bg-gray-900/80 backdrop-blur-lg rounded-[10px] p-4 h-full flex items-center gap-4 border border-white/10 hover:border-yellow-400/30 transition-colors">
           <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center text-3xl">
             <Icon style={style} />
           </div>
@@ -142,8 +142,8 @@ export const ModernSkills = () => {
       className="relative overflow-hidden bg-black py-24 md:py-32"
     >
       {/* Enhanced background effects (Style Preserved) */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-cyan-900/10 to-black z-0" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-900/20 via-transparent to-transparent z-0" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-yellow-900/10 to-black z-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-900/20 via-transparent to-transparent z-0" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0, 208, 255, 0.03)_1px,transparent_1px)] bg-[size:30px_30px] z-0 opacity-40" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
@@ -154,7 +154,7 @@ export const ModernSkills = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             // Updated text for professional focus
-            className="mb-4 text-5xl font-bold tracking-tighter text-transparent bg-gradient-to-br from-white via-slate-300 to-cyan-300 bg-clip-text md:text-7xl"
+            className="mb-4 text-5xl font-bold tracking-tighter text-transparent bg-gradient-to-br from-white via-slate-300 to-yellow-300 bg-clip-text md:text-7xl"
           >
           System Tools & Computational Toolkit
           </motion.h2>

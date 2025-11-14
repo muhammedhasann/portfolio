@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Navbar from "@/components/ui/navbar"; // Correct import path
 import "./globals.css";
 
 const roboto = localFont({
@@ -34,10 +35,40 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className={`${roboto.variable} dark`}>
-      {/* --- THIS IS THE FIX --- */}
-      {/* Added 'font-sans' to apply your custom Roboto font */}
-      <body className="font-sans antialiased">{children}</body>
+    // --- FIX: Added scroll-smooth ---
+    <html lang="en" className={`${roboto.variable} dark scroll-smooth`}>
+      {/* --- FIX FOR CLS (LAYOUT SHIFT) ---
+        The report said your H1 (Engineer) was shifting because the font
+        "...media/9c133a109c8ce041-s.p.ttf" was loading late.
+        
+        This <link> tells the browser to load that font file *immediately*,
+        preventing the layout shift.
+      */}
+      <head>
+        <link
+          rel="preload"
+          href="/_next/static/media/9c133a109c8ce041-s.p.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+        {/* This second preload is for the *other* big font file 
+          from your "Enormous network payloads" report.
+        */}
+        <link
+          rel="preload"
+          href="/_next/static/media/4d16d55d6080ddef-s.p.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+      </head>
+
+      {/* --- FIX: Navbar must be INSIDE the <body> --- */}
+      <body className="font-sans antialiased">
+        <Navbar />
+        {children}
+      </body>
     </html>
   );
 }

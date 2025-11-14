@@ -182,11 +182,25 @@ export const  EnhancedProjectsSection
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <a href={project.url} target="_blank" rel="noopener noreferrer" className="flex h-10 flex-grow items-center justify-center rounded-md border border-orange-500/50 bg-orange-500/10 text-sm font-medium text-orange-300 transition-all duration-300 hover:bg-orange-500/20">
+                    {/* --- ACCESSIBILITY FIX: Added sr-only span --- */}
+                    <a 
+                      href={project.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex h-10 flex-grow items-center justify-center rounded-md border border-orange-500/50 bg-orange-500/10 text-sm font-medium text-orange-300 transition-all duration-300 hover:bg-orange-500/20"
+                    >
                       <ExternalLink className="mr-2 h-4 w-4" />
                       View Project
+                      {/* This is hidden visually but read by screen readers */}
+                      <span className="sr-only"> for {project.title}</span>
                     </a>
-                    <a href={project.repo} target="_blank" rel="noopener noreferrer" className="flex h-10 items-center justify-center rounded-md border border-neutral-700 bg-transparent px-4 text-sm font-medium text-neutral-300 transition-colors hover:border-neutral-600 hover:bg-neutral-800/80 hover:text-white">
+                    <a 
+                      href={project.repo} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex h-10 items-center justify-center rounded-md border border-neutral-700 bg-transparent px-4 text-sm font-medium text-neutral-300 transition-colors hover:border-neutral-600 hover:bg-neutral-800/80 hover:text-white"
+                      aria-label={`View code for ${project.title}`} // More descriptive aria-label
+                    >
                       <Github className="mr-2 h-4 w-4" />
                       Code
                     </a>

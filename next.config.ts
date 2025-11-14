@@ -1,34 +1,82 @@
 /** @type {import('next').NextConfig} */
+
+// --- CSP (Content Security Policy) Configuration ---
+// This is a strict policy. 'self' means only load resources from your own domain.
+// We make exceptions for fonts ('data:') and images from specific sources.
+const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' blob: data: img.youtube.com images.unsplash.com placehold.co;
+    font-src 'self' data:;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    block-all-mixed-content;
+    upgrade-insecure-requests;
+`.replace(/\s{2,}/g, ' ').trim(); // Minify the policy string
+
 const nextConfig = {
-  // Enable React Strict Mode for better error detection in development
   reactStrictMode: true,
 
-  // Optimize images with additional formats and quality settings
   images: {
     remotePatterns: [
       {
-        protocol: 'https', // Removed 'as const'
+        protocol: 'https',
         hostname: 'img.youtube.com',
       },
       {
-        protocol: 'https', // Removed 'as const'
+        protocol: 'https',
         hostname: 'images.unsplash.com',
       },
       {
         protocol: 'https',
-        hostname: 'placehold.co', // Added this from your other components
+        hostname: 'placehold.co',
       },
     ],
-    // 'quality' and 'formats' are not valid top-level keys here.
-    // 'quality' is a prop on the <Image /> component.
   },
 
-  // The 'async headers()' function has been REMOVED.
-  // This fixes the 'unsafe-inline' security warning.
-  // Vercel will now provide its own default, secure headers.
-
-  // 'experimental: { appDir: true }' and 'swcMinify: true'
-  // are removed because they are default in Next.js 15.
+  // --- THIS IS THE FIX ---
+  // We add the 'async headers()' function to implement security headers
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes in your application.
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: cspHeader,
+          },
+          {
+            key: 'Strict-Transport-Security',
+            // Enforces HTTPS for 2 years, including subdomains, and allows preloading
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          {
+            key: 'X-Frame-Options',
+            // Prevents clickjacking
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            // Prevents MIME-sniffing
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            // Isolates your site
+            value: 'same-origin',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

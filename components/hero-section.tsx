@@ -16,7 +16,6 @@ const WelcomeBadge = () => (
   <motion.div
     initial={{ opacity: 0, y: -30 }}
     animate={{ opacity: 1, y: 0 }}
-    // --- FIX: Removed delay to make it appear instantly ---
     transition={{ duration: 0.7, delay: 0, ease: "easeOut" }}
     className="group relative mb-12 inline-flex items-center gap-4 overflow-hidden rounded-full border border-white/20 bg-black/50 px-6 py-3 backdrop-blur-md"
   >
@@ -40,7 +39,6 @@ const CTAs = () => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    // --- FIX: Significantly reduced delay to make buttons appear quickly ---
     transition={{ duration: 0.6, delay: 0.2 }} 
     className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
   >
@@ -67,11 +65,12 @@ const CTAs = () => (
 export default function HeroSection() {
   const [index, setIndex] = useState(0);
   
-  // This state is important to prevent a hydration mismatch error
+  // This state is crucial to fixing React Error #418 (Hydration Mismatch)
+  // We will only render the rotating text *after* the component has "mounted" on the client.
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // This code now only runs on the client, after hydration
+    // When this runs, we are on the client.
     setIsMounted(true); 
     
     const id = setInterval(() => setIndex((i) => (i + 1) % TITLES.length), 3000);
@@ -79,15 +78,16 @@ export default function HeroSection() {
   }, []); // Empty dependency array is correct
 
   return (
-    <section className="relative flex min-h-screen w-full overflow-hidden bg-black antialiased items-center justify-center pt-24 pb-20 md:pt-0">
+    <section id="home" className="relative flex min-h-screen w-full overflow-hidden bg-black antialiased items-center justify-center pt-24 pb-20 md:pt-0">
       
       <div className="relative z-30 mx-auto w-full max-w-7xl p-4 md:p-8 text-center">
-        {/* This will now appear instantly */}
         <WelcomeBadge />
 
-        {/* This div container prevents the layout from shifting when the title changes height */}
+        {/* This div container prevents layout shift when the title changes */}
         <div className="h-[84px] md:h-[108px] lg:h-[160px]"> 
           {isMounted ? (
+            // (Client-Only Render)
+            // This code runs *after* hydration, so it's safe to use motion and rotating text.
             <AnimatePresence mode="wait">
               <motion.h1
                 key={index} 
@@ -102,8 +102,9 @@ export default function HeroSection() {
               </motion.h1>
             </AnimatePresence>
           ) : (
-            // Render a static h1 on the server and initial client load
-            // This prevents hydration errors and layout shift
+            // (Server-Side Render & Initial Client Render)
+            // This static H1 matches what the server sends.
+            // This prevents the hydration error and fixes CLS.
             <h1
               className="bg-clip-text text-7xl font-extrabold text-transparent md:text-9xl lg:text-[10rem] leading-none tracking-tighter"
               style={{ backgroundImage: "linear-gradient(to top, #ffffff, #94a3b8)" }}
@@ -113,14 +114,12 @@ export default function HeroSection() {
           )}
         </div>
 
-        {/* This paragraph is not animated, so it will appear instantly, which is good for LCP. */}
         <p
           className="mx-auto mt-8 max-w-4xl text-xl font-light leading-loose text-slate-300 md:text-2xl"
         >
           Engineering realities yet to be observed—where atoms, algorithms and aesthetics converge to power the next century.
         </p>
         
-        {/* These buttons will now appear much sooner */}
         <CTAs />
       </div>
     </section>
