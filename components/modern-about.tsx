@@ -553,12 +553,103 @@ const achievements = [
 // Main Page Component
 // =================================================================================
 export default function AboutMe() {
-  return (
-    <section id="about" className="relative overflow-hidden bg-black py-20 md:py-32">
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(79,171,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(79,171,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] z-0 opacity-10" />
+  return (<section
+  id="about"
+  className="relative overflow-hidden bg-black py-24 md:py-32"
+>
+  {/* ===================================================== */}
+  {/* EXPERIENCE-STYLE BACKGROUND */}
+  {/* ===================================================== */}
 
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
+  {/* Main orange cinematic gradient */}
+  <div className="absolute inset-0 bg-gradient-to-b from-black via-orange-900/10 to-black z-0" />
+
+  {/* Radial glow */}
+  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-900/20 via-transparent to-transparent z-0" />
+
+  {/* Grid dots */}
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,165,0,0.03)_1px,transparent_1px)] bg-[size:30px_30px] z-0" />
+
+  {/* SVG futuristic pattern */}
+  <div className="absolute inset-0 opacity-20 z-0">
+    <div
+      className="absolute inset-0"
+      style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f97316' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        backgroundSize: '60px 60px',
+      }}
+    />
+  </div>
+
+  {/* ===================================================== */}
+  {/* CONTENT */}
+  {/* ===================================================== */}
+  <div className="max-w-7xl mx-auto px-4 relative z-10">
         
+        {/* ====================================================================== */}
+        {/* --- "ABOUT ME" SECTION --- */}
+        {/* ====================================================================== */}
+        <div id="about-story" className="mb-28 md:mb-40"> {/* Note: 'id' is 'about' at the top */}
+          <SectionHeader
+            badgeIcon={LucideIcons.User}
+            badgeText="My Story"
+            title="My Journey So Far"
+          />
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-stretch"> 
+            
+            <div className="lg:col-span-5 h-full">
+              <FadeIn delay={0.4} direction="up" className="h-full">
+                {/* --- THIS IS WHERE THE IMAGE PATH IS DEFINED --- */}
+                <FuturisticImageCard
+                  src="/me/imagee.jpeg"
+                  alt="A portrait of Muhammed Hasan"
+                />
+              </FadeIn>
+            </div>
+            
+            <div className="lg:col-span-7 h-full">
+  
+              <FadeIn delay={0.3} direction="up">
+<FadeIn delay={0.3} direction="up">
+  <p className="text-lg leading-relaxed text-neutral-300 mb-8">
+    I grew up in Syria. After the war, I started over in Siirt, Turkey. That gap between where I was and what I wanted to build is probably why I work the way I do: from <span className="font-bold text-cyan-400">scratch</span>, from{" "}
+    <br />
+    <span className="font-bold text-orange-400">first principles</span>, until it works.
+  </p>
+  
+  <p className="text-lg leading-relaxed text-neutral-300 mb-8">
+    I graduated as a <span className="font-bold text-cyan-400">Mechanical Engineer</span> from Siirt University, focused on thermal management, energy storage, and aerospace structures. Over the past four years I've designed battery cooling systems, a jet engine combustion chamber, fabricated supercapacitor electrodes from agricultural waste, modeled a nuclear reactor, and published research along the way. I also led teams to competition placements at national and global level, and mentored over 100 students in <span className="font-bold text-orange-400">robotics and embedded systems</span> at Deneyap.
+  </p>
+
+  <p className="text-lg leading-relaxed text-neutral-300 mb-8">
+    I'm looking for environments — a research group, an engineering team, or a <span className="font-bold text-cyan-400">PhD program</span> — where that kind of rigor is the standard, not the exception.
+  </p>
+</FadeIn>
+                <div className="border-t border-white/10 pt-6 mt-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+                  <div className="text-gray-300">
+                    <LucideIcons.Languages className="mx-auto mb-2 h-7 w-7 text-cyan-400" />
+                    <span className="font-semibold">4 Languages</span>
+                  </div>
+                  <div className="text-gray-300">
+                    <LucideIcons.Swords className="mx-auto mb-2 h-7 w-7 text-orange-400" />
+                    <span className="font-semibold">Video Games</span>
+                  </div>
+                  <div className="text-gray-300">
+                    <LucideIcons.Footprints className="mx-auto mb-2 h-7 w-7 text-cyan-400" />
+                    <span className="font-semibold">Football</span>
+                  </div>
+                  <div className="text-gray-300">
+                    <LucideIcons.Waves className="mx-auto mb-2 h-7 w-7 text-orange-400" />
+                    <span className="font-semibold">Swimming</span>
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+          </div>
+        </div>
+
+
         {/* ====================================================================== */}
         {/* --- Hero Header --- */}
         {/* ====================================================================== */}
@@ -571,14 +662,6 @@ export default function AboutMe() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-orange-400">
                 Next Energy Frontier
               </span>
-            </>
-          }
-          subtitle={
-            <>
-              Fusing <span className="text-cyan-300 font-semibold">AI</span>,{" "}
-              <span className="text-orange-300 font-semibold">Robotics</span>, &{" "}
-              <span className="text-purple-300 font-semibold">Quantum Tech</span> for
-              a Sustainable Future.
             </>
           }
         />
@@ -640,7 +723,6 @@ export default function AboutMe() {
               viewport={{ once: true }}
               className="text-3xl font-extrabold text-white mb-6 pl-4"
             >
-              Key Matrix
             </motion.h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
               <DataPanelItem
@@ -652,19 +734,11 @@ export default function AboutMe() {
                 delay={0.3}
               />
               <DataPanelItem
-                icon={LucideIcons.FlaskConical}
-                title="Core Research"
-                value="4+"
-                description="TÜBİTAK, Clean Energy Lab, 2x Conference Papers."
-                color="orange"
-                delay={0.4}
-              />
-              <DataPanelItem
                 icon={LucideIcons.Award}
                 title="Awards & Finals"
                 value="3+"
                 description="2x Teknofest Finalist & 3rd Place, YES Challenge."
-                color="cyan"
+                color="orange"
                 delay={0.5}
               />
               <DataPanelItem
@@ -679,293 +753,6 @@ export default function AboutMe() {
           </div>
         </div>
 
-        {/* ====================================================================== */}
-        {/* --- "ABOUT ME" SECTION --- */}
-        {/* ====================================================================== */}
-        <div id="about-story" className="mb-28 md:mb-40"> {/* Note: 'id' is 'about' at the top */}
-          <SectionHeader
-            badgeIcon={LucideIcons.User}
-            badgeText="My Story"
-            title="A Personal Introduction"
-          />
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-stretch"> 
-            
-            <div className="lg:col-span-5 h-full">
-              <FadeIn delay={0.4} direction="up" className="h-full">
-                {/* --- THIS IS WHERE THE IMAGE PATH IS DEFINED --- */}
-                <FuturisticImageCard
-                  src="/me/imagee.jpeg"
-                  alt="A portrait of Muhammed Hasan"
-                />
-              </FadeIn>
-            </div>
-            
-            <div className="lg:col-span-7 h-full">
-              <FadeIn delay={0.2} direction="up">
-                {/*
-                  NOTE: This is the <h2> from the report.
-                  For perfect accessibility, this should be <h3>
-                  but I am only changing the badge per your request.
-                */}
-                <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl mb-6">
-                  My Journey So Far.
-                </h2>
-              </FadeIn>
-              <FadeIn delay={0.3} direction="up">
-                <p className="text-lg leading-relaxed text-neutral-300 mb-8">
-                  Hello! I'm a recent{" "}
-                  <span className="font-bold text-cyan-400">Mechanical Engineering</span> graduate, complemented by an intensive{" "}
-                  <span className="font-bold text-orange-400">Backend Development</span> bootcamp. This dual background provides a unique perspective on
-                  fusing physical systems with digital intelligence.
-                  <br />
-                  Currently, I'm working as an instructor and mentor, and{" "}
-                  <span className="font-bold text-orange-400">am actively seeking full-time</span> engineering roles or{" "} <span className="font-bold text-cyan-400">Master & Ph.D. opportunities </span>
-                  in my core interests:{" "}
-                  <span className="font-bold text-purple-400">
-                    AI, quantum computing, robotics, and sustainable energy systems
-                  </span>.
-                </p>
-                <div className="border-t border-white/10 pt-6 mt-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-                  <div className="text-gray-300">
-                    <LucideIcons.Languages className="mx-auto mb-2 h-7 w-7 text-cyan-400" />
-                    <span className="font-semibold">4 Languages</span>
-                  </div>
-                  <div className="text-gray-300">
-                    <LucideIcons.Swords className="mx-auto mb-2 h-7 w-7 text-orange-400" />
-                    <span className="font-semibold">Video Games</span>
-                  </div>
-                  <div className="text-gray-300">
-                    <LucideIcons.Footprints className="mx-auto mb-2 h-7 w-7 text-cyan-400" />
-                    <span className="font-semibold">Football</span>
-                  </div>
-                  <div className="text-gray-300">
-                    <LucideIcons.Waves className="mx-auto mb-2 h-7 w-7 text-orange-400" />
-                    <span className="font-semibold">Swimming</span>
-                  </div>
-                </div>
-              </FadeIn>
-            </div>
-          </div>
-        </div>
-        
-        {/* ====================================================================== */}
-        {/* --- Core Research (Uses ModernCard) --- */}
-        {/* ====================================================================== */}        
-        <div className="mb-28 md:mb-40">
-          <SectionHeader
-            badgeIcon={LucideIcons.BrainCircuit}
-            badgeText="Core Focus"
-            title="My Interdisciplinary Toolkit"
-          />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {researchAreas.map((area, index) => (
-              <ModernCard key={index} color={area.color} delay={0.3 + index * 0.1}>
-                <div
-                  className={cn(
-                    "mb-6 p-4 rounded-xl",
-                    {
-                      "bg-cyan-500/20": area.color === "cyan",
-                      "bg-orange-500/20": area.color === "orange",
-                      "bg-blue-500/20": area.color === "blue",
-                      "bg-purple-500/20": area.color === "purple",
-                    }
-                  )}
-                >
-                  <area.icon className={cn(
-                    "w-10 h-10",
-                    {
-                      "text-cyan-400": area.color === "cyan",
-                      "text-orange-400": area.color === "orange",
-                      "text-blue-400": area.color === "blue",
-                      "text-purple-400": area.color === "purple",
-                    }
-                  )} />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-3">{area.title}</h3>
-                <p className="text-gray-300 leading-relaxed">{area.description}</p>
-              </ModernCard>
-            ))}
-          </div>
-        </div>
-
-        {/* ====================================================================== */}
-        {/* --- Education Section --- */}
-        {/* ====================================================================== */}
-        <div className="mb-28 md:mb-40 max-w-4xl mx-auto">
-          <SectionHeader
-            badgeIcon={LucideIcons.GraduationCap}
-            badgeText="Education & Training"
-            title="Academic & Certification Journey"
-          />
-          
-          <div className="relative before:absolute before:left-[15px] before:top-0 before:h-full before:w-px before:bg-gradient-to-b before:from-cyan-500/50 before:to-transparent before:z-0 pl-10">
-            {education.map((edu, index) => (
-              <ResearchTimeline
-                key={index}
-                delay={0.3 + index * 0.2}
-                isLast={index === education.length - 1}
-                icon={index === 0 ? LucideIcons.GraduationCap : index === 1 ? LucideIcons.Leaf : LucideIcons.Code}
-              >
-                <FieldCard
-                  delay={0.5 + index * 0.2}  
-                  fieldColor={index % 2 === 0 ? "cyan" : "orange"}
-                >
-                  <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-white mb-1">
-                        {edu.degree}
-                      </h3>
-                      <p className="text-cyan-400 font-semibold">
-                        {edu.institution}
-                      </p>
-                    </div>
-                    <div className="text-right mt-3 md:mt-0">
-                      <div className="flex items-center justify-end gap-2 text-gray-300 mb-1">
-                        <LucideIcons.Calendar className="w-4 h-4" />
-                        <span className="text-sm">{edu.period}</span>
-                      </div>
-                      <div className="flex items-center justify-end gap-2 text-gray-300">
-                        <LucideIcons.MapPin className="w-4 h-4" />
-                        <span className="text-sm">{edu.location}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {edu.highlights.map((highlight, idx) => (
-                      <Badge key={idx} variant={index % 2 === 0 ? "cyan" : "orange"}>
-                        {highlight}
-                      </Badge>
-                    ))}
-                    {edu.gpa && <Badge variant="blue">GPA: {edu.gpa}</Badge>}
-                    {edu.certification && (
-                      <Badge variant="purple">{edu.certification}</Badge>
-                    )}
-                  </div>
-                </FieldCard>
-              </ResearchTimeline>
-            ))}
-          </div>
-        </div>
-
-        {/* ====================================================================== */}
-        {/* --- Key Achievements (Uses 3-col layout) --- */}
-        {/* ====================================================================== */}
-        <div className="mb-28 md:mb-40">
-          <SectionHeader
-            badgeIcon={LucideIcons.Award}
-            badgeText="Key Achievements"
-            title="Quantifiable Impact & Recognition"
-          />
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {achievements.map((ach, index) => (
-              <AchievementCard key={index} {...ach} delay={0.3 + index * 0.1} />
-            ))}
-          </div>
-        </div>
-
-        {/* ====================================================================== */}
-        {/* --- Research Mission (Footer section) --- */}
-        {/* ====================================================================== */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          viewport={{ once: true }}
-          className="text-center max-w-4xl mx-auto"
-        >
-          <FieldCard fieldColor="orange" delay={0.5}>
-            <div className="max-w-3xl mx-auto">
-              <div className="flex justify-center gap-6 mb-8">
-                <div className="p-4 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-2xl">
-                  <LucideIcons.Atom className="w-8 h-8 text-cyan-400" />
-                </div>
-                <div className="p-4 bg-gradient-to-br from-orange-500/20 to-yellow-500/20 rounded-2xl">
-                  <LucideIcons.BrainCircuit className="w-8 h-8 text-orange-400" />
-                </div>
-                <div className="p-4 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl">
-                  <LucideIcons.Bot className="w-8 h-8 text-purple-400" />
-                </div>
-              </div>
-
-              <h3 className="text-4xl font-extrabold text-white mb-6">
-                My Innovation Mandate
-              </h3>
-              <p className="text-xl text-gray-200 mb-8 leading-relaxed">
-                My mission is to apply my skills in mechanical engineering,
-                thermal science, and AI to develop **scalable, next-generation
-                energy storage and renewable energy technologies** that
-                contribute directly to a carbon-neutral future.
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7, duration: 0.6 }}
-                  viewport={{ once: true }}
-                  className="group p-5 bg-black/50 rounded-xl border border-white/10 hover:border-cyan-400/50 transition-all duration-300"
-                >
-                  <div className="p-2.5 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-lg w-fit mx-auto mb-3">
-                    <LucideIcons.Battery className="w-6 h-6 text-cyan-400" />
-                  </div>
-                  <h4 className="text-lg font-bold text-white mb-2 group-hover:text-cyan-100 transition-colors duration-300">
-                    Pioneering Electrochemistry
-                  </h4>
-                  <p className="text-gray-300 text-sm">
-                    Pioneering new materials for supercapacitors and hydrogen
-                    systems.
-                  </p>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8, duration: 0.6 }}
-                  viewport={{ once: true }}
-                  className="group p-5 bg-black/50 rounded-xl border border-white/10 hover:border-orange-400/50 transition-all duration-300"
-                >
-                  <div className="p-2.5 bg-gradient-to-br from-orange-500/20 to-yellow-500/20 rounded-lg w-fit mx-auto mb-3">
-                    <LucideIcons.Bot className="w-6 h-6 text-orange-400" />
-                  </div>
-                  <h4 className="text-lg font-bold text-white mb-2 group-hover:text-orange-100 transition-colors duration-300">
-                    Intelligent Automation
-                  </h4>
-                  <p className="text-gray-300 text-sm">
-                    Using AI for energy forecasting and mentoring in applied
-                    robotics.
-                  </p>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.9, duration: 0.6 }}
-                  viewport={{ once: true }}
-                  className="group p-5 bg-black/50 rounded-xl border border-white/10 hover:border-purple-400/50 transition-all duration-300"
-                >
-                  <div className="p-2.5 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg w-fit mx-auto mb-3">
-                    <LucideIcons.Thermometer className="w-6 h-6 text-purple-400" />
-                  </div>
-                  <h4 className="text-lg font-bold text-white mb-2 group-hover:text-purple-100 transition-colors duration-300">
-                    Next-Gen Thermal Design
-                  </h4>
-                  <p className="text-gray-300 text-sm">
-                    Optimizing thermal management for batteries and renewable
-                    hardware.
-                  </p>
-                </motion.div>
-              </div>
-            </div>
-            
-            <div className="mt-10">
-              <ActionButton variant="primary" icon={LucideIcons.Cpu}>
-                Connect for Collaboration
-              </ActionButton>
-            </div>
-          </FieldCard>
-        </motion.div>
       </div>
     </section>
   );

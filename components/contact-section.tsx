@@ -446,112 +446,45 @@ const ContactSection = () => {
                       </>
                     )}
                   </motion.button>
-                  {/* This note indicates the form is in simulation mode */}
-                  <p className="text-xs text-neutral-600 text-center mt-4">
-                    Note: Form submission is simulated in this environment.
-                  </p>
                 </div>
               </form>
             </div>
           </motion.div>
         </div>
 
-        {/* Collaboration Areas */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="mt-20"
-        >
-          <div className="text-center mb-10">
-            <motion.div
-              className="inline-flex items-center bg-neutral-900 border border-neutral-800 text-neutral-300 px-4 py-1.5 mb-4 rounded-full"
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              <span className="text-sm font-medium tracking-wider">
-                COLLABORATION AREAS
-              </span>
-            </motion.div>
-            <h3 className="text-2xl font-semibold text-white mb-2">
-              Ways We Can Work Together
-            </h3>
-            <p className="text-neutral-400 max-w-2xl mx-auto">
-              Explore potential areas where we can combine our expertise
-            </p>
+
+
+
+
+      {/* Footer */}
+      <footer className="relative z-10 w-full pt-12 pb-8 px-6 border-t border-neutral-900">
+        <div className="max-w-6xl mx-auto flex flex-col items-center gap-12">
+                    <div className="w-full h-px bg-neutral-900"></div>
+
+          <div className="flex flex-col items-center gap-4">
+            <img src="/favicon.png" alt="Logo" className="w-16 h-16" />
+            <span className="font-semibold text-lg tracking-tight"></span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {collaborationAreas.map((area, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-              >
-                <div className="bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-6 h-full hover:border-neutral-700 transition-colors">
-                  <div className="mb-4">
-                    {/* BEST PRACTICE: Rendering icon from component ref */}
-                    <area.icon className={`w-6 h-6 ${area.color}`} />
-                  </div>
-                  <h4 className="text-xl font-semibold text-white mb-3">{area.title}</h4>
-                  <p className="text-neutral-400 text-sm mb-4">{area.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {area.tags.map((tag, tagIndex) => (
-                      <span
-                        key={tagIndex}
-                        className="px-3 py-1 bg-neutral-800 text-neutral-300 text-xs rounded-full border border-neutral-700"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+
+          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-6 text-neutral-500 text-sm">
+            <p>© {new Date().getFullYear()} Muhammed Hasan. All rights reserved.</p>
+            <div className="flex items-center gap-6">
+              {socialLinks.map((social, i) => (
+                <motion.a 
+                  key={i} 
+                  href={social.href} 
+                  whileHover={{ y: -2 }}
+                  className="hover:text-white transition-colors"
+                  aria-label={social.label}
+                >
+                  <social.icon className="w-5 h-5" />
+                </motion.a>
+              ))}
+            </div>
           </div>
-        </motion.div>
-
-
-
-
-        {/* Footer */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          viewport={{ once: true }}
-          className="text-center mt-24 pt-12 border-t border-neutral-800"
-        >
-          <p className="text-neutral-500 text-sm mb-6">
-            © {new Date().getFullYear()} Muhammed Hasan. All rights reserved.
-          </p>
-          <div className="flex justify-center items-center gap-4">
-            {socialLinks.map((social, index) => (
-              <motion.a
-                key={index}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                // ACCESSIBILITY FIX: Added descriptive aria-label
-                aria-label={`Visit my ${social.label} profile`}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="p-3 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-colors border border-neutral-700"
-                whileHover={{ scale: 1.1 }}
-              >
-                <social.icon className="w-5 h-5 text-neutral-300" />
-              </motion.a>
-            ))}
-          </div>
-        </motion.div>
+        </div>
+      </footer>
       </div>
     </section>
   );

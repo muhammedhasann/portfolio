@@ -44,7 +44,6 @@ export default function HomeClient() {
       <div id="about">
         <AboutMe />
       </div>
-        <GeminiSection /> 
       <div id="experience">
         <ExperienceSection />
       </div>
@@ -56,9 +55,10 @@ export default function HomeClient() {
       {/* 4. PROJECTS (Applied Research) - CRITICAL FOR PHD */}
       {/* We group all project-related sections under a single 'projects' id */}
       <div id="projects">
-        <EnhancedProjectsSection />
         <MechanicalProjects />
         <CadDesignGallery />
+                <EnhancedProjectsSection />
+
       </div>
 
       {/* 5. SKILLS (Technical Toolkit) */}

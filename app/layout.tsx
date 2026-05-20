@@ -66,7 +66,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
       {/* --- FIX: Navbar must be INSIDE the <body> --- */}
       <body className="font-sans antialiased">
-        <Navbar />
         {children}
       </body>
     </html>
