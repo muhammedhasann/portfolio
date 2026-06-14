@@ -1,0 +1,17 @@
+# *
+User-agent: *
+Allow: /
+
+# Googlebot
+User-agent: Googlebot
+Allow: /
+
+# *
+User-agent: *
+Disallow: /api/
+
+# Host
+Host: https://www.muhammedhasan.engineer
+
+# Sitemaps
+Sitemap: https://www.muhammedhasan.engineer/sitemap.xml
