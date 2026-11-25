@@ -24,7 +24,7 @@ index 612e8d0..2cc4a93 100644
  
    // ✅ GOOGLE SEARCH CONSOLE VERIFICATION
 diff --git a/components/CadDesignGallery.tsx b/components/CadDesignGallery.tsx
-index 02a1463..d58dcda 100644
+index 02a1463..1e4cadd 100644
 --- a/components/CadDesignGallery.tsx
 +++ b/components/CadDesignGallery.tsx
 @@ -27,6 +27,7 @@ import {
@@ -44,24 +44,15 @@ index 02a1463..d58dcda 100644
          alt={alt}
          className="h-full w-full object-contain"
          loading={priority ? "eager" : "lazy"}
-@@ -558,7 +559,7 @@ const CadCard: React.FC<CadCardProps> = memo(
-                 className="absolute inset-0 p-6"
-               >
-                 <OptimizedImage
--                  src={design.images[activeImage]}
-+                  src={asset(design.images[activeImage])}
-                   alt={design.title}
-                   priority={index < 3}
-                 />
-@@ -710,7 +711,7 @@ const ImageLightbox: React.FC<ImageLightboxProps> = memo(
-                 transition={{ duration: 0.3 }}
-               >
-                 <OptimizedImage
--                  src={design.images[currentIndex]}
-+                  src={asset(design.images[currentIndex])}
-                   alt={design.title}
-                   priority
-                 />
+@@ -490,7 +491,7 @@ const CadCard: React.FC<CadCardProps> = memo(
+     // Preload images on hover
+     const handleMouseEnter = () => {
+       for (const img of design.images) {
+-        new Image().src = img;
++        new Image().src = asset(img);
+       }
+     };
+ 
 diff --git a/components/contact-section.tsx b/components/contact-section.tsx
 index 2901581..d2c7dcf 100644
 --- a/components/contact-section.tsx
