@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Download } from 'lucide-react';
+import { asset } from '@/lib/utils';
 
 export default function HeroSection() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -45,7 +45,6 @@ export default function HeroSection() {
   z-index: 0;
   pointer-events: none;
 }
-        }
       `}</style>
 
       <div className="bg-grid"></div>
@@ -94,7 +93,7 @@ export default function HeroSection() {
                   <a href="#projects" className="group flex items-center justify-center gap-2 h-14 px-8 rounded-full bg-white text-black font-semibold hover:bg-zinc-200 transition-colors w-full sm:w-auto text-base">
                       Explore Work <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </a>
-                  <a href="/Muhammed_Hasan_CV.pdf" className="group flex items-center justify-center gap-2 h-14 px-8 rounded-full border border-white/10 bg-transparent text-white font-medium hover:bg-white/5 transition-colors w-full sm:w-auto text-base">
+                  <a href={asset("/Muhammed_Hasan_CV.pdf")} className="group flex items-center justify-center gap-2 h-14 px-8 rounded-full border border-white/10 bg-transparent text-white font-medium hover:bg-white/5 transition-colors w-full sm:w-auto text-base">
                       <Download className="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors" />
                       Download CV
                   </a>
