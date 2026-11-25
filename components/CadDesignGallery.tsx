@@ -27,6 +27,7 @@ import {
   Icon,
 } from "lucide-react";
 import { JSX } from "react/jsx-runtime";
+import { asset } from "@/lib/utils";
 
 /* ---------------------------------- */
 /* 1. TYPESCRIPT INTERFACES           */
@@ -375,7 +376,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(
     };
     return (
       <img
-        src={src}
+        src={asset(src)}
         alt={alt}
         className="h-full w-full object-contain"
         loading={priority ? "eager" : "lazy"}
@@ -490,7 +491,7 @@ const CadCard: React.FC<CadCardProps> = memo(
     // Preload images on hover
     const handleMouseEnter = () => {
       for (const img of design.images) {
-        new Image().src = img;
+        new Image().src = asset(img);
       }
     };
 
