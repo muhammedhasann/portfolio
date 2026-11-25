@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Heart, MessageCircle, Repeat2, Share, ExternalLink, Rss } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { asset } from "@/lib/utils";
 import Image from "next/image"; // <--- 1. IMPORT NEXT/IMAGE
 
 const XLogo = ({ className }: { className?: string }) => (
@@ -159,7 +160,7 @@ const XCard = () => {
               
               {/* --- 3. THE IMAGE FIX (Replaces 2.16MB <img> tag) --- */}
               <Image
-                src={post.author.profile_image_url}
+                src={asset(post.author.profile_image_url)}
                 alt={post.author.name}
                 width={48} // Corresponds to w-12
                 height={48} // Corresponds to h-12
