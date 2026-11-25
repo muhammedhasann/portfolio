@@ -3,6 +3,7 @@
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 import * as LucideIcons from "lucide-react";
 import React, { ReactNode } from "react";
+import { asset } from "@/lib/utils";
 import Image from 'next/image'; // Import Next.js Image component
 
 // --- Utility Function for Class Names ---
@@ -429,7 +430,7 @@ const FuturisticImageCard = ({ src, alt }: FuturisticImageCardProps) => (
       
       {/* --- THIS IS THE PERFORMANCE FIX --- */}
       <Image
-        src={src}
+        src={asset(src)}
         alt={alt}
         width={641}   // From PageSpeed report
         height={480}  // From PageSpeed report
