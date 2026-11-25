@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { asset } from "@/lib/utils";
 
 // ─────────────────────────────────────────────
 // FONTS
@@ -171,11 +172,11 @@ export const metadata: Metadata = {
     canonical: "https://www.muhammedhasan.engineer",
   },
 
-  // Favicon
+  // Favicon — asset() adds the /portfolio base path so the icon is found
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
+    icon: asset("/favicon.png"),
+    shortcut: asset("/favicon.png"),
+    apple: asset("/favicon.png"),
   },
 
   // ✅ GOOGLE SEARCH CONSOLE VERIFICATION
@@ -197,21 +198,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className={`${roboto.variable} dark scroll-smooth`}>
       <head>
-        {/* ✅ CLS FIX: Preload critical fonts so they don't cause layout shift */}
-        <link
-          rel="preload"
-          href="/_next/static/media/9c133a109c8ce041-s.p.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/_next/static/media/4d16d55d6080ddef-s.p.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
-        />
+        {/* (Removed the hard-coded /_next/static/media/*.ttf font preloads:
+            their hashed filenames change every build and they pointed at the
+            wrong path under /portfolio. Next.js preloads localFont fonts
+            automatically.) */}
 
         {/* ✅ PERFORMANCE: Preconnect to save round-trip time on key domains */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
