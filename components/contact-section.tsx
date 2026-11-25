@@ -21,6 +21,7 @@ import {
   MessageSquare,
   type LucideIcon, // Import the type for better type-safety
 } from "lucide-react";
+import { asset } from "@/lib/utils";
 
 // =================================================================================
 // Professional Best Practice: Component Definitions
@@ -187,18 +188,6 @@ const ContactSection = () => {
       // Reset the button after 5 seconds
       setTimeout(() => setSubmitStatus('idle'), 5000);
     }
-   
-
-    // --- MOCK SUBMISSION (for this environment) ---
-    // This part simulates a successful submission so you can test the UI.
-    // Please DELETE this mock code when you re-enable the emailjs code above.
-    console.log("Form submitted (mock):", formData);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-    setSubmitStatus('success');
-    setFormData({ name: "", email: "", subject: "", message: "" });
-    setIsSubmitting(false);
-    setTimeout(() => setSubmitStatus('idle'), 5000);
-    // --- END MOCK SUBMISSION ---
   };
 
   return (
@@ -411,7 +400,7 @@ const ContactSection = () => {
                     onChange={handleInputChange}
                     required
                     rows={6}
-                    className="w-full bg-neutral-800 border border-neutral-700 text-white placeholder:text-neutral-500 resize-none rounded-lg p-4 focus:border-neutral-300 focus:ring-1 focus:ring-neutral-300/3D"
+                    className="w-full bg-neutral-800 border border-neutral-700 text-white placeholder:text-neutral-500 resize-none rounded-lg p-4 focus:border-neutral-300 focus:ring-1 focus:ring-neutral-300/30"
                     placeholder="Tell me about your project..."
                   />
                 </div>
@@ -462,7 +451,7 @@ const ContactSection = () => {
                     <div className="w-full h-px bg-neutral-900"></div>
 
           <div className="flex flex-col items-center gap-4">
-            <img src="/favicon.png" alt="Logo" className="w-16 h-16" />
+            <img src={asset("/favicon.png")} alt="Logo" className="w-16 h-16" />
             <span className="font-semibold text-lg tracking-tight"></span>
           </div>
 
