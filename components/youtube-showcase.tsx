@@ -1,10 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
-import { Eye, Calendar, ExternalLink, Youtube, Clock, ThumbsUp } from "lucide-react";
+import { Eye, Calendar, ExternalLink, Youtube, Clock, ThumbsUp, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 import Image from "next/image"; 
+import { asset } from "@/lib/utils";
 
 // --- Video Interface ---
 interface Video {
@@ -76,8 +77,9 @@ const FuturisticBadge = () => (
 // --- VideoCard Component ---
 const VideoCard = ({ video, index }: { video: Video; index: number }) => {
   
-  // --- FIX: Removed 'isHovered' state ---
-  // const [isHovered, setIsHovered] = useState(false);
+  // Click-to-play: the lightweight thumbnail is shown first (fast page load);
+  // the YouTube player is only loaded when the visitor clicks it.
+  const [isPlaying, setIsPlaying] = useState(false);
 
   return (
     <motion.div
@@ -91,35 +93,56 @@ const VideoCard = ({ video, index }: { video: Video; index: number }) => {
       // onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative aspect-video w-full">
-        <div className="absolute inset-0 rounded-t-2xl overflow-hidden">
-          
-          <Image
-            src={video.thumbnail}
-            alt={video.title}
-            fill
-            priority={index < 2}
-            sizes="(max-width: 768px) 100vw, 50vw"
-            // --- FIX: Removed hover-based classes ---
-            className="object-cover transition-all duration-500"
+        {isPlaying ? (
+          /* The real YouTube player. autoplay=1 starts it immediately because the
+             visitor just clicked. The YouTube logo / title inside the player also
+             open the video on youtube.com. */
+          <iframe
+            className="absolute inset-0 h-full w-full rounded-t-2xl"
+            src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0&playsinline=1`}
+            title={video.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            referrerPolicy="strict-origin-when-cross-origin"
           />
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={() => setIsPlaying(true)}
+              aria-label={`Play video: ${video.title}`}
+              className="absolute inset-0 block h-full w-full cursor-pointer overflow-hidden rounded-t-2xl"
+            >
+              <Image
+                src={asset(video.thumbnail)}
+                alt={video.title}
+                fill
+                priority={index < 2}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover transition-all duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-          
-          {/* --- FIX: Removed the iframe entirely --- */}
+              {/* Play button */}
+              <span className="absolute inset-0 flex items-center justify-center">
+                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600/90 shadow-lg shadow-red-900/50 ring-4 ring-white/20 transition-transform duration-300 group-hover:scale-110">
+                  <Play className="ml-1 h-7 w-7 fill-white text-white" />
+                </span>
+              </span>
+            </button>
 
-        </div>
-        
-        {/* --- FIX: Removed the play button that shows on hover --- */}
-
-        <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10">
-          <Badge className="bg-gradient-to-r from-red-600 to-red-500 text-white text-xs px-2.5 py-1 font-medium shadow-sm">
-            {video.category}
-          </Badge>
-          <div className="flex items-center gap-1.5 bg-black/70 text-white text-xs px-2.5 py-1 rounded-full border border-neutral-700">
-            <Clock className="w-3.5 h-3.5" />
-            <span>{video.duration}</span>
-          </div>
-        </div>
+            {/* Badges sit on top but let clicks fall through to the play button */}
+            <div className="pointer-events-none absolute top-4 left-4 right-4 z-10 flex items-start justify-between">
+              <Badge className="bg-gradient-to-r from-red-600 to-red-500 text-white text-xs px-2.5 py-1 font-medium shadow-sm">
+                {video.category}
+              </Badge>
+              <div className="flex items-center gap-1.5 bg-black/70 text-white text-xs px-2.5 py-1 rounded-full border border-neutral-700">
+                <Clock className="w-3.5 h-3.5" />
+                <span>{video.duration}</span>
+              </div>
+            </div>
+          </>
+        )}
       </div>
       <div className="flex flex-col flex-1 p-6">
         <h3 className="text-xl font-bold text-white mb-3 leading-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-red-400 group-hover:to-red-300 transition-all">
@@ -160,7 +183,7 @@ const VideoCard = ({ video, index }: { video: Video; index: number }) => {
             </Badge>
           ))}
         </div>
-        {/* This button is now the only way to watch, which is much faster */}
+        {/* Opens the video on youtube.com in a new tab */}
         <Button
           size="sm"
           className="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white rounded-xl font-medium group mt-auto"
