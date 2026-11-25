@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import React, { useState, memo, useCallback } from "react";
 import { JSX } from "react/jsx-runtime";
+import { asset } from "@/lib/utils";
 
 // Utility for conditional class names
 // --- FIX: Added types for 'classes' ---
@@ -225,7 +226,7 @@ const ImageCarousel = memo(({ images, title }: ImageCarouselProps) => {
         {images.map((src, index) => (
           <div key={index} className="relative h-full w-full flex-shrink-0">
             <img
-              src={src}
+              src={asset(src)}
               alt={`${title} - view ${index + 1}`}
               className="h-full w-full object-cover"
               loading="lazy"
