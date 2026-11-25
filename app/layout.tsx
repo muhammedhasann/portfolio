@@ -32,8 +32,8 @@ const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Muhammed Hasan",
-  url: "https://www.muhammedhasan.engineer",
-  image: "https://www.muhammedhasan.engineer/me/imagee.jpeg",
+  url: "https://https://muhammedhasann.github.io/portfolio/",
+  image: "https://https://muhammedhasann.github.io/portfolio//me/imagee.jpeg",
   jobTitle: "Mechanical Engineer & AI Researcher",
   description:
     "Mechanical Engineer specializing in thermal management, energy storage, and aerospace structures. Teknofest finalist, TÜBİTAK researcher. Based in Siirt, Turkey.",
@@ -82,7 +82,7 @@ const personJsonLd = {
 // ─────────────────────────────────────────────
 export const metadata: Metadata = {
   // metadataBase is required for absolute Open Graph image URLs
-  metadataBase: new URL("https://www.muhammedhasan.engineer"),
+  metadataBase: new URL("https://https://muhammedhasann.github.io/portfolio/"),
 
   // Title shown in Google search results
   title: {
@@ -116,7 +116,7 @@ export const metadata: Metadata = {
   ],
 
   authors: [
-    { name: "Muhammed Hasan", url: "https://www.muhammedhasan.engineer" },
+    { name: "Muhammed Hasan", url: "https://https://muhammedhasann.github.io/portfolio/" },
   ],
   creator: "Muhammed Hasan",
   publisher: "Muhammed Hasan",
@@ -141,7 +141,7 @@ export const metadata: Metadata = {
     firstName: "Muhammed",
     lastName: "Hasan",
     locale: "en_US",
-    url: "https://www.muhammedhasan.engineer",
+    url: "https://https://muhammedhasann.github.io/portfolio/",
     siteName: "Muhammed Hasan",
     title: "Muhammed Hasan | Mechanical Engineer & AI Researcher",
     description:
@@ -169,7 +169,7 @@ export const metadata: Metadata = {
 
   // Canonical URL prevents duplicate content penalty
   alternates: {
-    canonical: "https://www.muhammedhasan.engineer",
+    canonical: "https://https://muhammedhasann.github.io/portfolio/",
   },
 
   // Favicon — asset() adds the /portfolio base path so the icon is found

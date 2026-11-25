@@ -1,7 +1,7 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   // Your domain
-  siteUrl: "https://www.muhammedhasan.engineer",
+  siteUrl: "https://https://muhammedhasann.github.io/portfolio/",
 
   // Automatically creates public/robots.txt too
   generateRobotsTxt: true,

@@ -11,7 +11,7 @@ User-agent: *
 Disallow: /api/
 
 # Host
-Host: https://www.muhammedhasan.engineer
+Host: https://https://muhammedhasann.github.io/portfolio/
 
 # Sitemaps
-Sitemap: https://www.muhammedhasan.engineer/sitemap.xml
+Sitemap: https://https://muhammedhasann.github.io/portfolio//sitemap.xml
